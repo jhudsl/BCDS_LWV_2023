@@ -1,0 +1,2 @@
+# Don't sync (pull from our computers to GitHub) any files in the data directory
+data/*
