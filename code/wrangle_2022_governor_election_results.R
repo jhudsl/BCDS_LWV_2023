@@ -1,6 +1,6 @@
-library(tabulizer)
-library(stringr)
-library(data.table)
+library(tabulizer) # for extract_text() function
+library(stringr) # for str_extract_all() function
+library(data.table) # for data.table() function
 
 # get all election results, as text
 download.file(url = "https://boe.baltimorecity.gov/sites/default/files/EL30%20GG%202022.pdf",
