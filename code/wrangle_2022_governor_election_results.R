@@ -16,14 +16,17 @@ governor_parties <- c("REP", "DEM", "LIB", "GRN", "WCP", NA)
 governor_table <- data.table(Election = "Governor",
                              Candidate = governor_candidates,
                              Party = governor_parties)
-all_results_table <- as.data.table(expand.grid(Precinct = precinct_names,
+election_results_table <- as.data.table(expand.grid(Precinct = precinct_names,
                                                Candidate = governor_candidates,
                                                Votes = -1, # placeholder value
                                                Percent = -1)) # placeholder value
-all_results_table <- governor_table[all_results_table, on = .(Candidate)]
+election_results_table <- governor_table[election_results_table, on = .(Candidate)]
 
-# get governor election results
-raw_governor_results_by_precinct <- unlist(str_extract_all(all_precinct_results, regex(paste(paste0(c(governor_candidates, "Total"), ".+?"), collapse = ""), dotall = T)))
+# get raw governor election results
+regex_for_raw_governor_election_results <- paste(paste0(c(governor_candidates, "Total"), ".+?"), collapse = "") # all precincts list all candidates, even if some candidates got 0 votes
+raw_governor_results_by_precinct <- unlist(str_extract_all(all_precinct_results,
+                                                           regex(regex_for_raw_governor_election_results,
+                                                                 dotall = T)))
 
 # remove non-governor election info from the text
 clean_1precinct_election_result <- function(precinct_result_text, candidates){
@@ -33,7 +36,7 @@ clean_1precinct_election_result <- function(precinct_result_text, candidates){
   return(result_text)
 }
 cleaned_governor_results_by_precinct <- lapply(raw_governor_results_by_precinct, clean_1precinct_election_result, candidates = governor_candidates)
-rm(raw_governor_results_by_precinct)
+rm(raw_governor_results_by_precinct, regex_for_raw_governor_election_results)
 
 # add all governor election results to table
 add_1precinct_to_table <- function(result_text, precinct, candidates){
@@ -41,7 +44,7 @@ add_1precinct_to_table <- function(result_text, precinct, candidates){
     candidate <- str_extract(result_text[i], "[A-z\\-]+")
     votes <- as.numeric(str_extract(result_text[i], "\\d+"))
     percent_of_vote <- as.numeric(str_extract(result_text[i], "\\d*\\.\\d+"))
-    all_results_table[Precinct == precinct & Election == "Governor" & Candidate == candidate, `:=`(Votes = votes,
+    election_results_table[Precinct == precinct & Election == "Governor" & Candidate == candidate, `:=`(Votes = votes,
                                                                                                    Percent = percent_of_vote)]
   }
   return(0)
@@ -50,4 +53,4 @@ success <- sapply(1:length(precinct_names), function(i) add_1precinct_to_table(r
 rm(success, cleaned_governor_results_by_precinct)
 
 # preview the data
-head(all_results_table)
+head(election_results_table)
