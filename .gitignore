@@ -1,2 +1,5 @@
 # Don't sync (pull from our computers to GitHub) any files in the data directory
 data/*
+
+# Ignore logger files from Mac
+*.DS_Store
