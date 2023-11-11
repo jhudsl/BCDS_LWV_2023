@@ -22,8 +22,7 @@ governor_table <- data.table(Election = "Governor",
                              Party = governor_parties)
 election_results_table <- as.data.table(expand.grid(Precinct = precinct_names,
                                                Candidate = governor_candidates,
-                                               Votes = 0,
-                                               Percent = 0))
+                                               Votes = 0))
 election_results_table <- governor_table[election_results_table, on = .(Candidate)]
 
 # get raw governor election results; use simple regex in this first step, for speed
@@ -35,10 +34,10 @@ raw_governor_results_by_precinct <- unlist(str_extract_all(all_precinct_results,
                                                                  dotall = T)))
 
 # remove unrelated info from the text
-# note 1: candidates with 0 votes will be filtered out because their percent isn't reported
-# note 2: 0 people voted in precinct 011-008, so no regex matches will be found, and character(0) will be returned
+# note: we choose to extract only the number of votes, not the percent (regex for including votes and percent would be ".+?\\d+ +\\d*\\.\\d+"; this would return character(0) for candidates who received 0 votes)
+# because percent isn't reported for candidates who received 0 votes; this would especially pose a problem for a precinct where no one voted
 clean_1precinct_election_result <- function(precinct_result_text, candidates){
-  regex <- paste(paste0(candidates, ".+?\\d+ +\\d*\\.\\d+"), collapse = "|")
+  regex <- paste(paste0(candidates, ".+?\\d+ "), collapse = "|")
   result_text <- unlist(str_extract_all(precinct_result_text, regex))
   result_text <- result_text[result_text != ""]
   return(result_text)
@@ -50,14 +49,13 @@ rm(raw_governor_results_by_precinct, regex_for_raw_governor_election_results)
 
 # add all governor election results to table
 add_1precinct_to_table <- function(result_text, precinct, candidates){
-  if (length(result_text) > 0){ # in a precinct where no one voted in the governor election, do not run this for loop
+  if (length(result_text) > 0){ # a fail-safe
     for (i in 1:length(result_text)){
       candidate <- str_extract(result_text[i], "[A-z\\-]+") # need to extract candidate because not all candidates will be included in this step; see previous step's comment
       votes <- as.numeric(str_extract(result_text[i], "\\d+"))
       percent_of_vote <- as.numeric(str_extract(result_text[i], "\\d*\\.\\d+"))
       election_results_table[Precinct == precinct & Election == "Governor" & Candidate == candidate,
-                             `:=`(Votes = votes,
-                                  Percent = percent_of_vote)]
+                             `:=`(Votes = votes)]
     }
   }
   return(0)
