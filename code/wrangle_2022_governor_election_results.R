@@ -4,10 +4,10 @@ library(data.table) # for data.table() function
 
 # download all election results (from PDF)
 download.file(url = "https://boe.baltimorecity.gov/sites/default/files/EL30%20GG%202022.pdf",
-              destfile = "data/baltimore_city_precinct_results_2022.pdf")
+              destfile = "data/input/public/baltimore_city_precincts_general_election_results_2022.pdf")
 
 # read all election results, as text
-all_precinct_results <- extract_text("data/baltimore_city_precinct_results_2022.pdf")
+all_precinct_results <- extract_text("data/input/public/baltimore_city_precincts_general_election_results_2022.pdf")
 
 # get names of precincts (three digits before the hyphen indicate the ward)
 regex_for_precincts <- "\\d{3}-\\d{3}"
@@ -67,3 +67,6 @@ rm(success, cleaned_governor_results_by_precinct)
 
 # preview the data
 head(election_results_table)
+
+# save the data
+fwrite(election_results_table, file = "data/intermediate/public/baltimore_city_governor_2022_general_election_results.csv")

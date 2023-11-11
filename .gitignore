@@ -1,5 +1,5 @@
-# Don't sync (pull from our computers to GitHub) any files in the data directory
-data/*
+# Don't sync (pull from our computers to GitHub) private data
+*private*
 
 # Ignore logger files from Mac or from R
 *.DS_Store
