@@ -11,7 +11,7 @@ dir <- "../"
 # read all election results, as text
 all_precinct_results <- extract_text(paste0(dir, "data/input/public/baltimore_city_precincts_general_election_results_2022.pdf"))
 
-# get names of precincts (three digits before the hyphen indicate the ward)
+# get names of precincts (FYI, three digits before the hyphen indicate the ward)
 regex_for_precincts <- "\\d{3}-\\d{3}"
 precinct_names <- unique(unlist(str_extract_all(string = all_precinct_results,
                                                 pattern = regex_for_precincts)))
@@ -68,7 +68,7 @@ parse_candidate_results <- function(candidate, all_candidates){
       }
     }
     
-    # now we can pull the text!
+    # now we can pull the text! (there is a vulnerability here in that it's possible that both columns in this row are WRITE-IN, in which case we'd be taking the left column)
     results_as_text <- str_extract(string = results_line_by_line[write_in_indices],
                                    pattern = paste0("WRITE-IN", ".+?\\d+")) # extract the variable name and the counts
   } else{
@@ -103,7 +103,7 @@ us_senator_results <- lapply(us_senator_candidates,
                              all_candidates = us_senator_candidates) %>%
   bind_rows()
 
-# save the data
+# save the resulting data tables
 write_csv(turnout_results, file = paste0(dir, "data/intermediate/public/baltimore_city_2022_general_election_turnout_results.csv"))
 write_csv(governor_results, file = paste0(dir, "data/intermediate/public/baltimore_city_2022_general_election_governor_results.csv"))
 write_csv(us_senator_results, file = paste0(dir, "data/intermediate/public/baltimore_city_2022_general_election_us_senator_results.csv"))
