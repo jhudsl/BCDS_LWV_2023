@@ -16,7 +16,7 @@ regex_for_precincts <- "\\d{3}-\\d{3}"
 precinct_names <- unique(unlist(str_extract_all(string = all_precinct_results,
                                                 pattern = regex_for_precincts)))
 
-# parse election results
+# set names of candidates for each election (office being voted on)
 results_line_by_line <- unlist(str_split(string = all_precinct_results,
                                          pattern = "\n"))
 
@@ -33,19 +33,21 @@ us_senator_candidates <- c("Chris Chaffee",
                            "Chris Van Hollen",
                            "WRITE-IN")
 
+# function to parse voter turnout for each precinct
 parse_turnout_results <- function(variable){
   results_as_text <- str_extract(string = results_line_by_line,
-                                 pattern = paste0(variable, ".+?\\d+"))
+                                 pattern = paste0(variable, ".+?\\d+")) # extract the variable name and the counts
   results_as_text <- results_as_text[!is.na(results_as_text)]
   
   results_as_tibble <- tibble(text = results_as_text) %>%
     mutate(Precinct = precinct_names,
            Variable = variable,
-           Count = str_extract(text, "\\d+"),
+           Count = str_extract(text, "\\d+"), # extract the number
            text = NULL)
   return(results_as_tibble)
 }
 
+# function to parse results of each election (office being voted on)
 parse_candidate_results <- function(candidate, all_candidates){
   if (candidate == "WRITE-IN"){
     # every election (office being voted on) has "WRITE-IN" as a candidate, so need extra filtering
@@ -68,11 +70,11 @@ parse_candidate_results <- function(candidate, all_candidates){
     
     # now we can pull the text!
     results_as_text <- str_extract(string = results_line_by_line[write_in_indices],
-                                   pattern = paste0("WRITE-IN", ".+?\\d+"))
+                                   pattern = paste0("WRITE-IN", ".+?\\d+")) # extract the variable name and the counts
   } else{
     # for registered candidates, we can do the usual str_extract() call
     results_as_text <- str_extract(string = results_line_by_line,
-                                   pattern = paste0(candidate, ".+?\\d+"))
+                                   pattern = paste0(candidate, ".+?\\d+")) # extract the variable name and the counts
     results_as_text <- results_as_text[!is.na(results_as_text)]
     
   }
@@ -81,13 +83,14 @@ parse_candidate_results <- function(candidate, all_candidates){
   results_as_tibble <- tibble(text = results_as_text) %>%
     mutate(Precinct = precinct_names,
            Candidate = candidate,
-           Affiliation = str_extract(text, "\\([A-z]+\\)"),
-           Votes = str_extract(text, "\\d+"),
+           Affiliation = str_extract(text, "\\([A-z]+\\)"), # extract the text enclosed in parentheses
+           Votes = str_extract(text, "\\d+"), # extract the number
            text = NULL) %>%
-    mutate(Affiliation = str_remove_all(Affiliation, "\\(|\\)"))
+    mutate(Affiliation = str_remove_all(Affiliation, "\\(|\\)")) # remove the parentheses
   return(results_as_tibble)
 }
 
+# parse!
 turnout_results <- lapply(turnout_variables,
                           parse_turnout_results) %>%
   bind_rows()
