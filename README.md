@@ -1,14 +1,14 @@
-# Title
+## Title
 
-_Authors_: fill in
+*Authors*: fill in
 
-_Contributors_: BCDS, collaborators (fill in)
+*Contributors*: BCDS, collaborators (fill in)
 
-_Created_: December 22, 2023
+*Created*: December 22, 2023
 
-_Overview_: fill in (summarize the project)
+*Overview*: fill in (summarize the project)
 
-# Description of Files
+## Description of Files
 
 `code/`
 
@@ -18,24 +18,24 @@ _Overview_: fill in (summarize the project)
 
 `data/`
 
-  `input/`
+    `input/`
   
-    `public/`
+        `public/`
+        
+        * `file1.R` (fill in)
     
-      - `file1.R` (fill in)
-    
-    `private/`
+        `private/`
   
-  `intermediate/`
+    `intermediate/`
   
-    `public/`
+        `public/`
+        
+        * `file1.R` (fill in)
     
-      - `file1.R` (fill in)
-    
-    `private/`
+        `private/`
 
 - to do: data dictionary
 
-# Contact Us
+## Contact Us
 
 fill in
