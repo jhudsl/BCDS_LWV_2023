@@ -3,7 +3,7 @@ library(tidyverse) # for piping (%>%) and various functions
 # location of this repository on user's computer
 dir <- "../"
 
-# uncomment this line if data isn't downloaded yet; to download all 2022 general election results (from online PDF)
+# uncomment this line if data isn't downloaded yet; to download all 2022 general election results, including breakdowns by ballot type, e.g., mail-in (already a csv)
 # download.file(url = "https://elections.maryland.gov/elections/2022/election_data/GG22_03PrecinctsResults.csv",
 #               destfile = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_ballot_type.csv"))
 
