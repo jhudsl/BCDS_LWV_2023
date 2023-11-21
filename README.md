@@ -1,4 +1,4 @@
-### Title
+# Title
 
 **Authors**: fill in
 
@@ -8,34 +8,34 @@
 
 **Overview**: fill in (summarize the project)
 
-### Description of Files
+## Description of Files
 
-*code/*
+- `code/`
 
-- `file1.R` (fill in)
+    - `file1.R` (fill in)
 
-- `file2.R` (fill in)
+    - `file2.R` (fill in)
 
-*data/*
+- `data/`
 
-    *input/*
+    - `input/`
   
-        *public/*
+        - `public/`
         
-        - `file1.R` (fill in)
+            - `file1.R` (fill in)
     
-        *private/*
+        - `private/`
   
-    *intermediate*
+    - `intermediate/`
   
-        *public/*
+        - `public/`
         
-        - `file1.R` (fill in)
+            - `file1.R` (fill in)
     
-        *private/*
+        - `private/`
 
-- to do: data dictionary
+    - to do: data dictionary
 
-### Contact Us
+## Contact Us
 
 fill in
