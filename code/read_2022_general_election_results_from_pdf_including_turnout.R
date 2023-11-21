@@ -6,10 +6,10 @@ dir <- "../"
 
 # uncomment this line if data isn't downloaded yet; to download all 2022 general election results (from online PDF)
 # download.file(url = "https://boe.baltimorecity.gov/sites/default/files/EL30%20GG%202022.pdf",
-#               destfile = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results.pdf"))
+#               destfile = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_turnout.pdf"))
 
 # read all election results, as text
-all_precinct_results <- extract_text(paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results.pdf"))
+all_precinct_results <- extract_text(paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_turnout.pdf"))
 
 # get names of precincts (FYI, three digits before the hyphen indicate the ward)
 regex_for_precincts <- "\\d{3}-\\d{3}"

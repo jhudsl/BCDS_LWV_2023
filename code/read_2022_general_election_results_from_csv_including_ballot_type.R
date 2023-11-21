@@ -5,10 +5,10 @@ dir <- "../"
 
 # uncomment this line if data isn't downloaded yet; to download all 2022 general election results (from online PDF)
 # download.file(url = "https://elections.maryland.gov/elections/2022/election_data/GG22_03PrecinctsResults.csv",
-#               destfile = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results.csv"))
+#               destfile = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_ballot_type.csv"))
 
 # read all election results, as csv
-all_precinct_results <- read_csv(paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results.csv"))
+all_precinct_results <- read_csv(paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_ballot_type.csv"))
 
 # create new column(s)
 all_precinct_results <- all_precinct_results %>% mutate(`Total Votes` = `Early Votes` + `Election Night Votes` +
