@@ -8,7 +8,7 @@ dir <- "../"
 #               destfile = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_ballot_type.csv"))
 
 # read all election results, as csv
-all_precinct_results <- read_csv(paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_ballot_type.csv"))
+all_precinct_results <- read_csv(file = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_ballot_type.csv"))
 
 # create new column(s)
 all_precinct_results <- all_precinct_results %>% mutate(`Total Votes` = `Early Votes` + `Election Night Votes` +

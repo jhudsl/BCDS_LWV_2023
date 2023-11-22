@@ -8,7 +8,28 @@ dir <- "../"
 # download.file(url = "https://planning.maryland.gov/Redistricting/Documents/2020data/GreenReport.pdf",
 #               destfile = paste0(dir, "data/input/public/Maryland/precinct_population_data_2020.pdf"))
 
-# read all election results, as text (creates 1 large character)
+# read population data, as a table from a PDF
+# select Tables 2 (adjusted total population) and 3 (adjusted voting-age population)
+
+table2p1 <- extract_tables(file = paste0(dir, "data/input/public/Maryland/precinct_population_data_2020.pdf"),
+                         pages = 53,
+                         columns = list(17),
+                         guess = F)
+
+get_page_dims(file = paste0(dir, "data/input/public/Maryland/precinct_population_data_2020.pdf"))
+
+table2 <- extract_tables(file = paste0(dir, "data/input/public/Maryland/precinct_population_data_2020.pdf"),
+                         pages = c(53:58),
+                         columns = list(20),
+                         guess = F) # set guess = FALSE because we can tell extract_tables() the number of columns
+table3 <- extract_tables(file = paste0(dir, "data/input/public/Maryland/precinct_population_data_2020.pdf"),
+                         pages = 88:92,
+                         columns = list(21),
+                         guess = F) # set guess = FALSE because we can tell extract_tables() the number of columns
+
+### ignore below this ###
+
+# read population data, as text from a PDF (creates 1 large character)
 all_precinct_results <- extract_text(paste0(dir, "data/input/public/Maryland/precinct_population_data_2020.pdf"))
 
 # prepare to parse the PDF by dividing it by newlines ("\n") (creates character vector)
@@ -70,3 +91,6 @@ table3 <- str_split_fixed(string = table3,
 # save the resulting data tables
 # write_csv(table2, file = paste0(dir, "data/intermediate/public/Baltimore_City/adjusted_precinct_populations_2020.csv"))
 # write_csv(table3, file = paste0(dir, "data/intermediate/public/Baltimore_City/adjusted_voting_age_populations_2020.csv"))
+
+# Note: voting-age population (VAP) is larger than citizen voting-age population (CVAP), thus overestimating the number of eligible voters
+# but this is the best variable we have to estimate eligible voters at the precinct level, since CVAP is calculated by the Census Bureau (not corrected for prison gerrymandering and at the census tract level)

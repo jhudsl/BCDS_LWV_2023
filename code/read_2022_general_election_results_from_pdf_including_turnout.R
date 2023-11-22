@@ -9,8 +9,9 @@ dir <- "../"
 #               destfile = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_turnout.pdf"))
 
 # read all election results, as text (creates 1 large character)
-# extract_tables() would be hard to use because each page contains multiple tables, so use extract_text()
-all_precinct_results <- extract_text(paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_turnout.pdf"))
+# extract_tables() would be hard to use because each page contains multiple tables and we want to pull only some of them
+# therefore, use extract_text()
+all_precinct_results <- extract_text(file = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_turnout.pdf"))
 
 # get names of precincts (FYI, three digits before the hyphen indicate the ward)
 regex_for_precincts <- "\\d{3}-\\d{3}"
