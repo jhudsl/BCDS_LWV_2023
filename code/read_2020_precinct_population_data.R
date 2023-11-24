@@ -27,6 +27,8 @@ table3 <- extract_tables(file = paste0(dir, "data/input/public/Maryland/precinct
                          columns = list(21),
                          guess = F) # set guess = FALSE because we can tell extract_tables() the number of columns
 
+# consider using row_split(), col_paste()
+
 ### ignore below this ###
 
 # read population data, as text from a PDF (creates 1 large character)
