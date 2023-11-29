@@ -16,7 +16,7 @@ turnout_2022_table <- turnout_2022_table %>%
          `Blank Ballots` = `BALLOTS CAST - BLANK`) %>%
   mutate(`Non-Blank Ballots` = `Total Ballots` - `Blank Ballots`,
          `Turnout including Blank Ballots (%)` = `Total Ballots` / Registered * 100,
-         `Turnout not including Blank Ballots (%)` = `Non-Blank Ballots` / Registered * 100)
+         `Turnout not including Blank Ballots (%)` = `Non-Blank Ballots` / Registered * 100) # Comment TEST
 
 # aggregate 296 precincts (each contains only 1 polling place) to 28 wards
 turnout_2022_table_by_ward <- turnout_2022_table %>%
