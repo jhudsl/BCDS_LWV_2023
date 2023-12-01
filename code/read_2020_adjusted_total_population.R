@@ -57,7 +57,7 @@ colnames(table2) <- c("Precinct", "Adjusted_or_Unadjusted", "Census_Total_Pop", 
                       "Adjusted_One_Race_Pop", "Adjusted_White_Alone_Pop", "Adjusted_Black_Alone_Pop",
                       "Adjusted_American_Indian_Alaskan_Native_Alone_Pop", "Adjusted_Asian_Alone_Pop",
                       "Adjusted_Native_Hawaiian_Pacific_Islander_Alone_Pop", "Adjusted_Other_Race_Alone_Pop",
-                      "Adjusted_Multiracial_Pop", "Adjusted_Hispanic_Latino_Pop", "Adjusted_Total_18Plus_Pop")
+                      "Adjusted_Multiracial_Pop", "Adjusted_Hispanic_Latino_Pop", "Adjusted_Total_Adult_Pop")
 
 # zero-pad the precinct name to match the {3 digits}-{3 digits} format in election results data files
 table2 <- table2 %>%
