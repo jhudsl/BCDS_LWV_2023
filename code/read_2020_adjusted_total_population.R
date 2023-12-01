@@ -59,6 +59,9 @@ colnames(table2) <- c("Precinct", "Adjusted_or_Unadjusted", "Census_Total_Pop", 
                       "Adjusted_Native_Hawaiian_Pacific_Islander_Alone_Pop", "Adjusted_Other_Race_Alone_Pop",
                       "Adjusted_Multiracial_Pop", "Adjusted_Hispanic_Latino_Pop", "Adjusted_Total_18Plus_Pop")
 
+# zero-pad the precinct name to match the {3 digits}-{3 digits} format in election results data files
+table2 <- table2 %>%
+  mutate(Precinct = paste0("0", Precinct))
 
 ##### Save the resulting data table
 
