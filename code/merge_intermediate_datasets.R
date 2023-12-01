@@ -43,7 +43,34 @@ merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_
                                                    "Adjusted_or_Unadjusted",
                                                    "Census_Total_Pop",
                                                    "Adjusted_Total_Pop",
-                                                   "Adjusted_Total_Adult_Pop"))
+                                                   "Adjusted_Total_Adult_Pop")) %>%
+  mutate(Registered_of_Adjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Adjusted_Total_Adult_Pop * 100, 2),
+         Turnout_of_Registered = round(`BALLOTS CAST - TOTAL` / `REGISTERED VOTERS - TOTAL` * 100, 2),
+         Turnout_of_Adjusted_Adults = round(`BALLOTS CAST - TOTAL` / Adjusted_Total_Adult_Pop * 100, 2),
+         Registered_of_Unadjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Census_Total_Adult_Pop * 100, 2),
+         Turnout_of_Unadjusted_Adults = round(`BALLOTS CAST - TOTAL` / Census_Total_Adult_Pop * 100, 2))
+
+# summarize turnout!
+# odd: some numbers are above 100%
+# > summary(merged_data$Registered_of_Adjusted_Adults)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#    3.85   76.88   87.71   86.65   95.37  290.42      60 
+# > summary(merged_data$Turnout_of_Registered)
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+# 10.40   25.09   34.22   36.17   44.37   72.37      32 
+# > summary(merged_data$Turnout_of_Adjusted_Adults)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#    1.39   19.34   28.00   31.08   38.54  149.61      60
+# > summary(merged_data$Registered_of_Unadjusted_Adults)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#    3.91   77.83   88.79   87.90   97.65  290.88      60 
+# > summary(merged_data$Turnout_of_Unadjusted_Adults)
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+# 1.42   20.05   28.60   31.47   38.82  149.84      60
+
+# save merged dataset
+write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/merged_data_2022GeneralElection_2020Population.csv"))
+
 
 # investigate odd situation where some precincts have more people registered or more ballots cast than the adult population
 # > summary(merged_data$Adjusted_Total_Adult_Pop - merged_data$`REGISTERED VOTERS - TOTAL`)
