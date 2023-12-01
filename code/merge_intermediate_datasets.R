@@ -50,8 +50,8 @@ merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_
          Registered_of_Unadjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Census_Total_Adult_Pop * 100, 2),
          Turnout_of_Unadjusted_Adults = round(`BALLOTS CAST - TOTAL` / Census_Total_Adult_Pop * 100, 2))
 
-# summarize turnout!
-# odd: some numbers are above 100%
+# # summarize turnout!
+# # odd: some numbers are above 100%. See more investigations at the bottom of this script
 # > summary(merged_data$Registered_of_Adjusted_Adults)
 # Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 #    3.85   76.88   87.71   86.65   95.37  290.42      60 
@@ -72,7 +72,7 @@ merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_
 write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/merged_data_2022GeneralElection_2020Population.csv"))
 
 
-# investigate odd situation where some precincts have more people registered or more ballots cast than the adult population
+# # investigate odd situation where some precincts have more people registered or more ballots cast than the adult population
 # > summary(merged_data$Adjusted_Total_Adult_Pop - merged_data$`REGISTERED VOTERS - TOTAL`)
 # Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 # -1315.0    42.5   181.0   280.5   410.0  2860.0      60 
@@ -85,3 +85,19 @@ write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_Ci
 # > summary(merged_data$Census_Total_Adult_Pop - merged_data$`BALLOTS CAST - TOTAL`)
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 # -317     586    1008    1107    1526    3975      60 
+
+# # Hmm... Maybe this is due to people reporting different addresses when they register to vote vs. when they fill out Census?
+# > sum(merged_data$Adjusted_Total_Adult_Pop < merged_data$`REGISTERED VOTERS - TOTAL`, na.rm = T)
+# [1] 44
+# > sum(merged_data$Census_Total_Adult_Pop < merged_data$`REGISTERED VOTERS - TOTAL`, na.rm = T)
+# [1] 52
+# > sum(merged_data$Adjusted_Total_Pop < merged_data$`REGISTERED VOTERS - TOTAL`, na.rm = T)
+# [1] 12
+# > sum(merged_data$Census_Total_Pop < merged_data$`REGISTERED VOTERS - TOTAL`, na.rm = T)
+# [1] 13
+
+# # sanity check passes: ballots cast < registered for all precincts (i.e., no negative numbers below)
+# > summary(merged_data$`REGISTERED VOTERS - TOTAL` - merged_data$`BALLOTS CAST - TOTAL`)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#     0.0   463.8   792.0   839.5  1148.2  2730.0      31
+
