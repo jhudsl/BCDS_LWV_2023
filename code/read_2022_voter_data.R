@@ -4,9 +4,32 @@
 library(tidyverse) # for piping (%>%) and various functions
 
 # location of this repository on user's computer
-dir <- "../"
+dir <- "/Users/ugochi/Library/CloudStorage/OneDrive-JohnsHopkins/GitHub/BCDS_LWV_2023/"
 
+# Import data
+voter_file <- read.csv("/Users/ugochi/Library/CloudStorage/OneDrive-JohnsHopkins/GitHub/BCDS_LWV_2023/data/input/private/Maryland/Rosenblum Registered Voter List_.csv")
+
+  # Count NAs
+  sapply(voter_file, function(x) sum(is.na(x)))
+
+# Filter to people who voted in 2022 general election, in Baltimore City county
+voter_data_2022 = voter_file %>%   ### store under new name  
+  filter(COUNTY == "Baltimore City")
+
+# Calculate {# of women} and {# of men} by precinct → this is a smaller aggregated dataset.
+sum(is.na(voter_file$GENDER))
+  # no missing gender data
+
+table(voter_data_2022$GENDER)
+  # F - 14,230
+  # M - 13,264
+  # U - 283 (What do we think 'U' is? Unspecified?)
+
+gender_by_precinct = voter_data_2022 %>%
+  group_by(PRECINCT, GENDER) %>%
+  summarize(COUNT=n())
 
 
 # save the resulting data tables
-# write_csv(voter_data_2022, file = paste0(dir, "data/intermediate/private/Maryland/voter_data_2022.csv"))
+write_csv(voter_data_2022, file = paste0(dir,"data/input/private/Maryland/voter_data_2022.csv"))
+write_csv(gender_by_precinct, file = paste0(dir,"data/intermediate/public/Baltimore City/general_election_2022/gender_by_precinct.csv"))
