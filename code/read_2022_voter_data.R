@@ -7,20 +7,34 @@ library(tidyverse) # for piping (%>%) and various functions
 dir <- "../"
 
 # Import data
-voter_file <- read.csv(paste0(dir, "data/input/private/Maryland/Rosenblum Registered Voter List_.csv"))
-
+voter_file <- read_csv(paste0(dir, "data/input/private/Maryland/Maryland_2022_Registered_Voter_List.csv"),
+                       na = c("NA",""))
   # Count NAs
   sapply(voter_file, function(x) sum(is.na(x)))
+
+history_file <- read_table(paste0(dir, "data/input/private/Maryland/Maryland_2022_Voting_History"), 
+                       col_names = c("Voter ID","Election Date", "Election Description", "ElectionType",
+                                     "Political Party", "Election Code", "Voting Method", "Date of Voting",
+                                     "Precinct", "Early Voting Location", "Jurisdiction Code", "CountyName"),
+                       na = c("NA", ""," "), skip = 1)
+
+# history_file <- read.table(paste0(dir, "data/input/private/Maryland/Maryland_2022_Voting_History"), sep="\t",
+#                            col.names = c("Voter ID","Election Date", "Election Description", "ElectionType",
+#                                          "Political Party", "Election Code", "Voting Method", "Date of Voting",
+#                                          "Precinct", "Early Voting Location", "Jurisdiction Code", "CountyName"),
+#                            na.strings = c("NA", ""," "), skip = 1)
+
+  
 
 # Filter to people who voted in 2022 general election, in Baltimore City county
 baltimore_voters_2022 = voter_file %>%   ### store under new name  
   filter(COUNTY == "Baltimore City")
 
 # Calculate {# of women} and {# of men} by precinct → this is a smaller aggregated dataset.
-sum(is.na(voter_file$GENDER))
+sum(is.na(voter_file$GENDER)) # Looking for NAs
   # no missing gender data
 
-table(voter_data_2022$GENDER)
+table(voter_data_2022$GENDER) # Counts of all women and men registered in MD
   # F - 14,230
   # M - 13,264
   # U - 283 (What do we think 'U' is? Unspecified?)
