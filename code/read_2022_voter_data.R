@@ -57,7 +57,8 @@ registered_voters_gender_2022 = baltimore_voters_2022 %>%
 sum(is.na(baltimore_voters_2022$AGE)) ### 8 missing ages in Baltimore
 
 baltimore_voters_2022 = baltimore_voters_2022 %>%
-  mutate(AGE_GROUP = case_when(AGE < 18 ~ "< 18",
+  mutate(AGE_GROUP = case_when(AGE < 16 ~ "< 16",
+                               AGE = 16 & AGE < 18 ~ "16-17",
                                AGE >=18 & AGE <25 ~ "18-24",
                                AGE >=25 & AGE <35 ~ "25-34",
                                AGE >=35 & AGE <45 ~ "35-44",
