@@ -28,6 +28,15 @@ turnout_results_2022general <- turnout_results_2022general %>%
 # > length(unique(adjusted_total_population_2020$Precinct))
 # [1] 269
 
+# > nrow(adjusted_adult_population_2020$Precinct)
+
+# > nrow(adjusted_total_population_2020$Precinct)
+
+
+#### to do: reconcile adjusted vs unadjusted precincts in adjusted_adult_population_2020, adjusted_total_population_2020
+# note: "Adjusted" columns are never blank; if unadjusted, they are the same as the census population variable
+
+
 # adult_population_covered <- unique(adjusted_adult_population_2020$Precinct) %in% unique(turnout_results_2022general$Precinct)
 # total_population_covered <- unique(adjusted_total_population_2020$Precinct) %in% unique(turnout_results_2022general$Precinct)
 # adult_population_not_covered <- unique(adjusted_adult_population_2020$Precinct)[!adult_population_covered]
@@ -50,6 +59,13 @@ merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_
          Registered_of_Unadjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Census_Total_Adult_Pop * 100, 2),
          Turnout_of_Unadjusted_Adults = round(`BALLOTS CAST - TOTAL` / Census_Total_Adult_Pop * 100, 2))
 
+# save merged dataset
+write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data_population_and_turnout.csv"))
+
+
+
+
+
 # # summarize turnout!
 # # odd: some numbers are above 100%. See more investigations at the bottom of this script
 # > summary(merged_data$Registered_of_Adjusted_Adults)
@@ -67,9 +83,6 @@ merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_
 # > summary(merged_data$Turnout_of_Unadjusted_Adults)
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 # 1.42   20.05   28.60   31.47   38.82  149.84      60
-
-# save merged dataset
-write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/merged_data_GeneralElection2022_Population2020.csv"))
 
 
 # # investigate odd situation where some precincts have more people registered or more ballots cast than the adult population
