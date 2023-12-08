@@ -69,7 +69,7 @@ merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_
 # 1.42   20.05   28.60   31.47   38.82  149.84      60
 
 # save merged dataset
-write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/merged_data_2022GeneralElection_2020Population.csv"))
+write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/merged_data_GeneralElection2022_Population2020.csv"))
 
 
 # # investigate odd situation where some precincts have more people registered or more ballots cast than the adult population
