@@ -47,18 +47,18 @@ table3 <- table3 %>%
   lapply(as_tibble) %>%
   bind_rows() %>%
   filter(grepl(pattern = "Baltimore City Precinct", x = V3)) %>%
-  select(-c(V1, V2, V3)) # remove unnecessary columns
+  select(-c(V1, V3)) # remove Congressional District, and V3 is unnecessary now
 
-colnames(table3) <- c("Precinct", "Adjusted_or_Unadjusted", "Census_Total_Pop", "Adjusted_Total_Pop",
+colnames(table3) <- c("Legislative", "Precinct", "Adjusted_or_Unadjusted", "Census_Total_Pop", "Adjusted_Total_Pop",
                       "Census_Total_Adult_Pop", "Adjusted_Total_Adult_Pop",
                       "Adjusted_One_Race_Adult_Pop", "Adjusted_White_Alone_Adult_Pop", "Adjusted_Black_Alone_Adult_Pop",
                       "Adjusted_American_Indian_Alaskan_Native_Alone_Adult_Pop", "Adjusted_Asian_Alone_Adult_Pop",
                       "Adjusted_Native_Hawaiian_Pacific_Islander_Alone_Adult_Pop", "Adjusted_Other_Race_Alone_Adult_Pop",
                       "Adjusted_Multiracial_Adult_Pop", "Adjusted_Hispanic_Latino_Adult_Pop")
 
-# zero-pad the precinct name to match the {3 digits}-{3 digits} format in election results data files
 table3 <- table3 %>%
-  mutate(Precinct = paste0("0", Precinct))
+  mutate(Legislative = str_remove(string = Legislative, pattern = "240"), # 24 is the Maryland state FIPS code, 0 is padding, so just get the last two digits for [state] legislative district
+         Precinct = paste0("0", Precinct)) # zero-pad the precinct name to match the {3 digits}-{3 digits} format in election results data files
 
 
 ##### Save the resulting data tables

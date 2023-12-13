@@ -51,7 +51,7 @@ table2 <- table2 %>%
   lapply(as_tibble) %>%
   bind_rows() %>%
   filter(grepl(pattern = "Baltimore City Precinct", x = V1)) %>%
-  select(-c(V1, V7, V16)) # remove blank nonexistent columns
+  select(-c(V1, V7, V16)) # remove unnecessary blank columns # to do: keep legislative district
 
 colnames(table2) <- c("Precinct", "Adjusted_or_Unadjusted", "Census_Total_Pop", "Adjusted_Total_Pop",
                       "Adjusted_One_Race_Pop", "Adjusted_White_Alone_Pop", "Adjusted_Black_Alone_Pop",
