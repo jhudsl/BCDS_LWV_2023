@@ -12,7 +12,8 @@ all_precinct_results <- read_csv(file = paste0(dir, "data/input/public/Baltimore
 
 # in the raw dataset, "Votes" means "Votes For", so rename columns to be clearer
 all_precinct_results <- all_precinct_results %>%
-  rename(`Early Votes for Candidate` = `Early Votes`,
+  rename(Precinct = `Election District - Precinct`,
+         `Early Votes for Candidate` = `Early Votes`,
          `Election Night Votes for Candidate` = `Election Night Votes`,
          `Mail-In Ballot 1 Votes for Candidate` = `Mail-In Ballot 1 Votes`,
          `Mail-In Ballot 2 Votes for Candidate` = `Mail-In Ballot 2 Votes`,
@@ -40,10 +41,10 @@ all_precinct_results <- all_precinct_results %>%
   ungroup() # no longer rowwise()
 
 # calculate total number of votes in each office being elected (combining all candidates), by ballot type
-precinct_ballot_types <- all_precinct_results %>%
+results_by_office_and_ballot_type <- all_precinct_results %>%
   group_by(County,
            `County Name`,
-           `Election District - Precinct`,
+           Precinct,
            Congressional,
            Legislative,
            `Office Name`) %>%
@@ -66,15 +67,21 @@ precinct_ballot_types <- all_precinct_results %>%
          `Mail-In Ballot 2 Votes` = sum(`Mail-In Ballot 2 Votes For`, `Mail-In Ballot 2 Votes Against`, na.rm = T)) %>%
   ungroup()
 
-precinct_ballot_types_concise <- precinct_ballot_types %>%
-  select(`Election District - Precinct`,
-         `Office Name`,
-         `Early Votes`,
-         `Election Night Votes`,
-         `Mail-In Ballot 1 Votes`,
-         `Provisional Votes`,
-         `Mail-In Ballot 2 Votes`)
+# count number of ballot type in each precinct by taking max across elected offices
+precinct_ballot_types <- results_by_office_and_ballot_type %>%
+  group_by(County,
+           `County Name`,
+           Precinct,
+           Congressional,
+           Legislative) %>%
+  summarize(`Early Votes` = max(`Early Votes`, na.rm = T),
+         `Election Night Votes` = max(`Election Night Votes`, na.rm = T),
+         `Mail-In Ballot 1 Votes` = max(`Mail-In Ballot 1 Votes`, na.rm = T),
+         `Provisional Votes` = max(`Provisional Votes`, na.rm = T),
+         `Mail-In Ballot 2 Votes` = max(`Mail-In Ballot 2 Votes`, na.rm = T)) %>%
+  ungroup()
 
 # save the resulting data table(s)
-write_csv(all_precinct_results, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/candidate_results_by_ballot_type.csv"))
+write_csv(all_precinct_results, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/results_by_office_and_ballot_type.csv"))
+write_csv(results_by_office_and_ballot_type, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_by_office_and_ballot_type.csv"))
 write_csv(precinct_ballot_types, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_by_ballot_type.csv"))
