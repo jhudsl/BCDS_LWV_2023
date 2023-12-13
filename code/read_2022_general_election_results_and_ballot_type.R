@@ -38,5 +38,25 @@ all_precinct_results <- all_precinct_results %>%
                                   `Total Votes Against`,
                                   na.rm = T))
 
+# calculate total number of votes in each office being elected (combining all candidates)
+precinct_ballot_types <- all_precinct_results %>%
+  summarize(`Early Votes For` = sum(`Early Votes for Candidate`),
+            `Early Votes Against` = sum(`Early Votes Against`),
+            `Election Night Votes For` = sum(`Election Night Votes for Candidate`),
+            `Election Night Votes Against` = sum(`Election Night Votes Against`),
+            `Mail-In Ballot 1 Votes For` = sum(`Mail-In Ballot 1 Votes for Candidate`),
+            `Mail-In Ballot 1 Votes Against` = sum(`Mail-In Ballot 1 Votes Against`),
+            `Provisional Votes For` = sum(`Provisional Votes for Candidate`),
+            `Provisional Votes Against` = sum(`Provisional Votes Against`),
+            `Mail-In Ballot 2 Votes For` = sum(`Mail-In Ballot 2 Votes for Candidate`),
+            `Mail-In Ballot 2 Votes Against` = sum(`Mail-In Ballot 2 Votes Against`),
+            .by = c(County,
+                    `County Name`,
+                    `Election District - Precinct`,
+                    Congressional,
+                    Legislative,
+                    `Office Name`)) # what about Office District?
+
+
 # save the resulting data table(s)
 write_csv(all_precinct_results, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/all_election_results_by_ballot_type.csv"))
