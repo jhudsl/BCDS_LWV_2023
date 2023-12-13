@@ -49,8 +49,13 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
 
 # merge, keeping all precincts so that neither total population nor total votes cast get lost when aggregating precincts into districts later
 # (so some precincts will have people living there but not votes cast)
-merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
-  full_join(ballot_types_2022general, by = c("Precinct"))
+# note that [state] legislative districts changed from 2020 to 2022, so use 2022 when possible
+# precincts did not change from 2020 to 2022, to the best of our knowledge
+merged_data <- full_join(ballot_types_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
+  mutate(Legislative = ifelse(!is.na(Legislative.x), Legislative.x, Legislative.y)) %>%
+  mutate(Legislative.x = NULL,
+         Legislative.y = NULL) %>%
+  full_join(turnout_results_2022general, by = c("Precinct"))
 
 # save merged dataset
 write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data_precincts.csv"))

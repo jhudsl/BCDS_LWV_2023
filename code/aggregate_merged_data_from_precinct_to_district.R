@@ -5,11 +5,9 @@ dir <- "../"
 
 # read in data
 precinct_data <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data_precincts.csv"))
-precinct_to_legislative_district_key <- read_csv(file = paste0(dir, "data/input/public/Baltimore_City/precinct_to_legislative_district_key.csv"))
 
 # aggregate from precinct to [state] legislative district
 legislative_district_data <- precinct_data %>%
-  left_join(precinct_to_legislative_district_key) %>%
   summarize(`REGISTERED VOTERS - TOTAL` = sum(`REGISTERED VOTERS - TOTAL`, na.rm = T),
             `BALLOTS CAST - TOTAL` = sum(`BALLOTS CAST - TOTAL`, na.rm = T),
             `BALLOTS CAST - BLANK` = sum(`BALLOTS CAST - BLANK`, na.rm = T),
