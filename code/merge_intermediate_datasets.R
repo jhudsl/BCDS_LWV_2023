@@ -47,8 +47,9 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
 # > adult_population_not_covered
 # [1] "012-013" "013-013" "020-012" "021-005" "025-018" ## hmm, this seems to be missing some
 
-# merge, keeping all precincts even if population data are missing
-merged_data <- left_join(turnout_results_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
+# merge, keeping all precincts so that neither total population nor total votes cast get lost when aggregating precincts into districts later
+# (so some precincts will have people living there but not votes cast)
+merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
   full_join(ballot_types_2022general, by = c("Precinct"))
 
 # save merged dataset
