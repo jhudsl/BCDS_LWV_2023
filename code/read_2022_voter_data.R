@@ -9,36 +9,27 @@ dir <- "../"
 
 #-----------------------------------------------------------------------------#
 
+# Election Year + Date (for code flexibility)
+election_year <- 2022
+election_date <- as.Date("2022-11-08")
+  
 # Import data
-voter_file <- read_csv(paste0(dir, "data/input/private/Maryland/Maryland_2022_Registered_Voter_List.csv"),
+voter_file <- read_csv(paste0(dir, "data/input/private/Maryland/Maryland_", election_year, "_Registered_Voter_List.csv"),
                        na = c("NA",""))
   # Count NAs
   sapply(voter_file, function(x) sum(is.na(x)))
 
-# history_file <- read_table(paste0(dir, "data/input/private/Maryland/Maryland_2022_Voting_History"), 
-#                        col_names = c("Voter ID","Election Date", "Election Description", "ElectionType",
-#                                      "Political Party", "Election Code", "Voting Method", "Date of Voting",
-#                                      "Precinct", "Early Voting Location", "Jurisdiction Code", "CountyName"),
-#                        na = c("NA", ""," "), skip = 1)
-
-# history_file <- read.table(paste0(dir, "data/input/private/Maryland/Maryland_2022_Voting_History"), sep="\t",
-#                            col.names = c("Voter ID","Election Date", "Election Description", "ElectionType",
-#                                          "Political Party", "Election Code", "Voting Method", "Date of Voting",
-#                                          "Precinct", "Early Voting Location", "Jurisdiction Code", "CountyName"),
-#                            na.strings = c("NA", ""," "), skip = 1)
-
 #-----------------------------------------------------------------------------#
-# Working with DOB to get age of voters
-# class(voter_file$DOB) ### checking class -- started as "character"
+### Working with DOB to create AGE feature ###
 
 voter_file$DOB <- as.Date(voter_file$DOB, format = "%m/%d/%y") ### transform from character to date
-# class(voter_file$DOB) ### checking class -- is now "Date"
-year(voter_file$DOB) <- ifelse(year(voter_file$DOB) > 2022, 
+
+year(voter_file$DOB) <- ifelse(year(voter_file$DOB) > election_year, 
                                year(voter_file$DOB) - 100, 
-                               year(voter_file$DOB)) ### years > 2022 changed to reflect 20th century year
+                               year(voter_file$DOB)) ### years > election_year changed to reflect 20th century year
 
 voter_file <- voter_file %>%
-  mutate(AGE = floor(as.numeric(difftime(as.Date("2022-11-08"), DOB, units = "days") / 365.25))) ### create AGE variable
+  mutate(AGE = floor(as.numeric(difftime(election_date, DOB, units = "days") / 365.25))) ### creates AGE variable; age rounded down
 
 #-----------------------------------------------------------------------------#  
 
@@ -53,7 +44,7 @@ registered_voters_gender_2022 = baltimore_voters_2022 %>%
   group_by(PRECINCT, GENDER) %>%
   summarize(COUNT=n()) ### summarizing gender by precinct
 
-# Voter age groups
+# Create voter AGE groups
 sum(is.na(baltimore_voters_2022$AGE)) ### 8 missing ages in Baltimore
 
 baltimore_voters_2022 = baltimore_voters_2022 %>%
@@ -69,6 +60,7 @@ baltimore_voters_2022 = baltimore_voters_2022 %>%
 registered_voters_age_2022 = baltimore_voters_2022 %>%
   group_by(AGE_GROUP) %>%
   summarize(COUNT=n()) ### summarizing age groups
+
 
 # save the resulting data tables
 write_csv(baltimore_voters_2022, file = paste0(dir,"data/input/private/Maryland/baltimore_voters_2022.csv"))
