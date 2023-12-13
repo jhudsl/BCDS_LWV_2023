@@ -48,8 +48,8 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
 # [1] "012-013" "013-013" "020-012" "021-005" "025-018" ## hmm, this seems to be missing some
 
 # merge, keeping all precincts even if population data are missing
-merged_data <- full_join(turnout_results_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
+merged_data <- left_join(turnout_results_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
   full_join(ballot_types_2022general, by = c("Precinct"))
 
 # save merged dataset
-write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data.csv"))
+write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data_precincts.csv"))
