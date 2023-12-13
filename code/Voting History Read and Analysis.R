@@ -38,55 +38,35 @@ sum(duplicated(finalbaltimoredata$`Voter ID`))
 
 #2020 PRESIDENTIAL GENERAL ELECTION and 2022 GUBERNATORIAL GENERAL ELECTION are options
 
-baltimore_finaldata$PRECINCT<-as.numeric(baltimore_finaldata$PRECINCT)
-baltimore_finaldata$GENDER[baltimore_finaldata$GENDER=="F"]<-0
-baltimore_finaldata$GENDER[baltimore_finaldata$GENDER=="M"]<-1
-baltimore_finaldata$GENDER[baltimore_finaldata$GENDER=="U"]<-NA
+finalbaltimoredata$PRECINCT<-as.numeric(finalbaltimoredata$PRECINCT)
+finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="F"]<-0
+finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="M"]<-1
+finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="U"]<-NA
 
-##IGNORE CODE
-history__by_ward <- baltimore_finaldata %>% 
-  group_by(PRECINCT) %>%
-  summarize(Gender=length(which(GENDER==0)))
-
-percent<-merge(history__by_ward, history__by_ward1, by="PRECINCT")
-percent$percent_female<-percent$Gender/percent$n*100
-percent<-percent[,c("PRECINCT", "percent_female")]
-####
 
 #Get precinct counts
-history__by_ward1 <- baltimore_finaldata %>%
+history__by_ward1 <- finalbaltimoredata %>%
   group_by(PRECINCT) %>%
   count(PRECINCT)
 
 #Get gender counts
-history_gender<-baltimore_finaldata %>%
+history_gender<-finalbaltimoredata %>%
   group_by(PRECINCT) %>%
   count(GENDER)
 
 #Convert to wide form
 history_gender_wide <-spread(history_gender, GENDER, n)
 
-#merge gender and total precinct counts
-percent1<-merge(history_gender_wide, history__by_ward1, by="PRECINCT")
-
-#calculate percents 
-percent1$percent_female<-percent1$`0`/percent1$n*100
-percent1$percent_male<-percent1$`1`/percent1$n*100
-percent1$percent_unknown<-percent1$`<NA>`/percent1$n*100
-
 #remove all raw count vars to make final dataset
-percent1<-percent1[,c("PRECINCT", "percent_female", "percent_male", "percent_unknown")]
 
 #Age
 election_year <- 2022
 election_date <- as.Date("2022-11-08")
-baltimore_finaldata$DOB <- as.Date(baltimore_finaldata$DOB, format = "%m-%d-%Y") ### transform from character to date
+finalbaltimoredata$DOB <- as.Date(finalbaltimoredata$DOB, format = "%m-%d-%Y") ### transform from character to date
 
-
-
-baltimore_finaldata <- baltimore_finaldata %>%
+finalbaltimoredata <- finalbaltimoredata %>%
   mutate(AGE = floor(as.numeric(difftime(election_date, DOB, units = "days") / 365.25))) ### creates AGE variable; age rounded down
-baltimore_age = baltimore_finaldata %>%
+baltimore_age = finalbaltimoredata %>%
   mutate(AGE_GROUP = case_when(AGE < 16 ~ "< 16",
                                AGE = 16 & AGE < 18 ~ "16-17",
                                AGE >=18 & AGE <25 ~ "18-24",
@@ -105,5 +85,5 @@ history_age<-baltimore_age %>%
 history_age_wide <-spread(history_age, AGE_GROUP, n)
 
 #join to gender data 
-
+finalhistorybreakdowndata<-merge(history_gender_wide, history_age_wide)
 
