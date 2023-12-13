@@ -10,8 +10,7 @@ dir <- "../"
 # read all election results, as csv
 all_precinct_results <- read_csv(file = paste0(dir, "data/input/public/Baltimore_City/general_election_2022/precinct_results_including_ballot_type.csv"))
 
-# NOTE: in the raw dataset, "Votes" means "Votes For"
-# rename columns to be clearer
+# in the raw dataset, "Votes" means "Votes For", so rename columns to be clearer
 all_precinct_results <- all_precinct_results %>%
   rename(`Early Votes for Candidate` = `Early Votes`,
          `Election Night Votes for Candidate` = `Election Night Votes`,
@@ -19,7 +18,7 @@ all_precinct_results <- all_precinct_results %>%
          `Mail-In Ballot 2 Votes for Candidate` = `Mail-In Ballot 2 Votes`,
          `Provisional Votes for Candidate` = `Provisional Votes`)
 
-# create new columns
+# create new columns for each candidate in each precinct
 all_precinct_results <- all_precinct_results %>%
   rowwise() %>%
   mutate(`Total Votes For Candidate` = sum(`Early Votes for Candidate`,
@@ -38,7 +37,7 @@ all_precinct_results <- all_precinct_results %>%
                                   `Total Votes Against`,
                                   na.rm = T))
 
-# calculate total number of votes in each office being elected (combining all candidates)
+# calculate total number of votes in each office being elected (combining all candidates), by ballot type
 precinct_ballot_types <- all_precinct_results %>%
   summarize(`Early Votes For` = sum(`Early Votes for Candidate`),
             `Early Votes Against` = sum(`Early Votes Against`),
@@ -59,4 +58,5 @@ precinct_ballot_types <- all_precinct_results %>%
 
 
 # save the resulting data table(s)
-write_csv(all_precinct_results, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/all_election_results_by_ballot_type.csv"))
+write_csv(all_precinct_results, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/candidate_results_by_ballot_type.csv"))
+write_csv(precinct_ballot_types, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/results_by_ballot_type.csv"))
