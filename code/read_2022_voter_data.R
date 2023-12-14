@@ -2,6 +2,7 @@
 ### NOTE: In this project, we treat this data as PRIVATE because it contains individuals' personal information
 
 library(tidyverse) # for piping (%>%) and various functions
+library(dplyr)
 library(lubridate) # for working with dates
 
 # location of this repository on user's computer
@@ -11,13 +12,29 @@ dir <- "../"
 
 # Election Year + Date (for code flexibility)
 election_year <- 2022
+data_year <- 2023 # when this voter file was generated
 election_date <- as.Date("2022-11-08")
   
 # Import data
 voter_file <- read_csv(paste0(dir, "data/input/private/Maryland/Maryland_", election_year, "_Registered_Voter_List.csv"),
                        na = c("NA",""))
-  # Count NAs
-  sapply(voter_file, function(x) sum(is.na(x)))
+
+# sapply(voter_file, function(x) sum(is.na(x))) # counts NAs in voter_file
+  
+# Exclude people who voted after election_date
+voter_file <- voter_file %>%
+  mutate(STATE_REGISTRATION_DATE = as.Date(STATE_REGISTRATION_DATE, format = "%m/%d/%y"),
+         COUNTY_REGISTRATION_DATE = as.Date(COUNTY_REGISTRATION_DATE, format = "%m/%d/%y"))
+
+year(voter_file$STATE_REGISTRATION_DATE) <- ifelse(year(voter_file$STATE_REGISTRATION_DATE) > data_year, 
+                                                year(voter_file$STATE_REGISTRATION_DATE) - 100, 
+                                                year(voter_file$STATE_REGISTRATION_DATE))
+year(voter_file$COUNTY_REGISTRATION_DATE) <- ifelse(year(voter_file$COUNTY_REGISTRATION_DATE) > data_year, 
+                                                year(voter_file$COUNTY_REGISTRATION_DATE) - 100, 
+                                                year(voter_file$COUNTY_REGISTRATION_DATE))
+
+voter_file <- voter_file %>%
+  filter(STATE_REGISTRATION_DATE <= election_date) ### removing those who registered AFTER election_date
 
 #-----------------------------------------------------------------------------#
 ### Working with DOB to create AGE feature ###
