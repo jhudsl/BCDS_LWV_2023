@@ -76,20 +76,20 @@ finalbaltimoredata <- baltimoredatadupes1 %>% distinct(`Voter ID`, .keep_all = T
 # confirm no dupes
 # sum(duplicated(finalbaltimoredata$`Voter ID`))
 
-### Record gender as 0 if woman, 1 if man, NA if unknown
+### Record sex as 0 if woman, 1 if man, NA if unknown
 finalbaltimoredata$PRECINCT <- as.numeric(finalbaltimoredata$PRECINCT)
 finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="F"] <- 0
 finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="M"] <- 1
 finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="U"] <- NA
 
 
-# Get gender counts by precinct
-history_gender <- finalbaltimoredata %>%
+# Get sex counts by precinct
+history_sex <- finalbaltimoredata %>%
   group_by(PRECINCT) %>%
   count(GENDER)
 
 # Convert to wide form
-history_gender_wide <-spread(history_gender, GENDER, n)
+history_sex_wide <-spread(history_sex, GENDER, n)
 
 # Get age group counts by precinct
 history_age <- finalbaltimoredata %>%
@@ -99,8 +99,8 @@ history_age <- finalbaltimoredata %>%
 # Convert long to wide format
 history_age_wide <-spread(history_age, AGE_GROUP, n)
 
-# join gender and age count by precinct data 
-gender_and_age_counts_by_precinct <- merge(history_gender_wide, history_age_wide)
+# join sex and age count by precinct data 
+sex_and_age_counts_by_precinct <- merge(history_sex_wide, history_age_wide)
 
 # save csv(s)
-write_csv(gender_and_age_counts_by_precinct, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/gender_and_age_counts_by_precinct.csv"))
+write_csv(sex_and_age_counts_by_precinct, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/sex_and_age_counts_by_precinct.csv"))
