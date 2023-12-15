@@ -7,8 +7,10 @@ dir <- "../"
 turnout_results_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_results.csv"))
 ballot_types_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_by_ballot_type.csv"))
 candidate_results_by_ballot_type_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/candidate_results_by_ballot_type.csv"))
+voter_demographics_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/sex_and_age_counts_by_precinct.csv"))
+voter_genders_2022registered <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/registered_voters_gender_2022.csv"))
+# to do: voter_ages_2022registered and rename gender to sex
 adjusted_adult_population_2020 <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/adjusted_adult_population_2020.csv"))
-# to do: read voter data to get gender/sex of registered and turned-out voters
 
 # pivot long data frame(s) to wide
 turnout_results_2022general <- turnout_results_2022general %>%
@@ -47,6 +49,16 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
 # > adult_population_not_covered
 # [1] "012-013" "013-013" "020-012" "021-005" "025-018" ## hmm, this seems to be missing some
 
+# clean voter demographic data
+voter_demographics_2022general <- voter_demographics_2022general %>%
+  select(-c(`...1`)) %>% # remove first column, which is row number
+  rename(Precinct = PRECINCT, Voted_Female = `0`, Voted_Male = `1`, Voted_UnknownSex = `<NA>`,
+         Voted_16to17 = `16-17`, Voted_18to24 = `18-24`, Voted_25to34 = `25-34`, Voted_35to44 = `35-44`, Voted_45to54 = `45-54`, Voted_55to64 = `55-64`, Voted_65plus = `65+`) %>%
+  mutate(Precinct = ifelse(nchar(Precinct) == 4, paste0("00", Precinct), paste0("0", Precinct))) %>% # zero-pad the precinct
+  mutate(Precinct = paste0(substr(Precinct, 1, 3), "-", substr(Precinct, 4, 6))) %>% # use {3 digit ward}-{3 digit precinct within ward} naming convention for precinct
+  mutate(Voted_16to17 = ifelse(is.na(Voted_16to17), 0, Voted_16to17))
+
+
 # merge, keeping all precincts so that neither total population nor total votes cast get lost when aggregating precincts into districts later
 # (so some precincts will have people living there but not votes cast)
 # note that [state] legislative districts changed from 2020 to 2022, so use 2022 when possible
@@ -55,7 +67,8 @@ merged_data <- full_join(ballot_types_2022general, adjusted_adult_population_202
   mutate(Legislative = ifelse(!is.na(Legislative.x), Legislative.x, Legislative.y)) %>%
   mutate(Legislative.x = NULL,
          Legislative.y = NULL) %>%
-  full_join(turnout_results_2022general, by = c("Precinct"))
+  full_join(turnout_results_2022general, by = c("Precinct")) %>%
+  full_join(voter_demographics_2022general, by = c("Precinct"))
 
 # save merged dataset
 write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data_precincts.csv"))
