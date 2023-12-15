@@ -85,7 +85,7 @@ finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="U"] <- NA
 
 # Get sex counts by precinct
 history_sex <- finalbaltimoredata %>%
-  group_by(PRECINCT) %>%
+  group_by(PRECINCT, COUNCILMANIC_DISTRICTS, LEGISLATIVE_DISTRICTS) %>%
   count(GENDER)
 
 # Convert to wide form
@@ -93,7 +93,7 @@ history_sex_wide <-spread(history_sex, GENDER, n)
 
 # Get age group counts by precinct
 history_age <- finalbaltimoredata %>%
-  group_by(PRECINCT) %>%
+  group_by(PRECINCT, COUNCILMANIC_DISTRICTS, LEGISLATIVE_DISTRICTS) %>%
   count(AGE_GROUP)
 
 # Convert long to wide format
