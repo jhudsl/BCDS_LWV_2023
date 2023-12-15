@@ -52,7 +52,8 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
 # clean voter demographic data
 voter_demographics_2022general <- voter_demographics_2022general %>%
   select(-c(`...1`)) %>% # remove first column, which is row number
-  rename(Precinct = PRECINCT, Voted_Female = `0`, Voted_Male = `1`, Voted_UnknownSex = `<NA>`,
+  rename(Precinct = PRECINCT, Councilmanic = COUNCILMANIC_DISTRICTS, Legislative = LEGISLATIVE_DISTRICTS,
+         Voted_Female = `0`, Voted_Male = `1`, Voted_UnknownSex = `<NA>`,
          Voted_16to17 = `16-17`, Voted_18to24 = `18-24`, Voted_25to34 = `25-34`, Voted_35to44 = `35-44`, Voted_45to54 = `45-54`, Voted_55to64 = `55-64`, Voted_65plus = `65+`) %>%
   mutate(Precinct = ifelse(nchar(Precinct) == 4, paste0("00", Precinct), paste0("0", Precinct))) %>% # zero-pad the precinct
   mutate(Precinct = paste0(substr(Precinct, 1, 3), "-", substr(Precinct, 4, 6))) %>% # use {3 digit ward}-{3 digit precinct within ward} naming convention for precinct
@@ -68,7 +69,7 @@ merged_data <- full_join(ballot_types_2022general, adjusted_adult_population_202
   mutate(Legislative.x = NULL,
          Legislative.y = NULL) %>%
   full_join(turnout_results_2022general, by = c("Precinct")) %>%
-  full_join(voter_demographics_2022general, by = c("Precinct"))
+  full_join(voter_demographics_2022general, by = c("Precinct", "Legislative"))
 
 # save merged dataset
 write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data_precincts.csv"))
