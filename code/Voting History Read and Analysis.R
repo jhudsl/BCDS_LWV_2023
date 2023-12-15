@@ -99,7 +99,7 @@ history_age <- finalbaltimoredata %>%
 history_age_wide <-spread(history_age, AGE_GROUP, n)
 
 # join sex and age count by precinct data 
-sex_and_age_counts_by_precinct <- merge(history_sex_wide, history_age_wide, by="PRECINCT")
+sex_and_age_counts_by_precinct <- merge(history_sex_wide, history_age_wide, by=c("PRECINCT", "COUNCILMANIC_DISTRICTS", "LEGISLATIVE_DISTRICTS"))
 
 # save csv(s)
 write.csv(sex_and_age_counts_by_precinct, "sex_and_age_counts_by_precinct_2020_primary.csv")
