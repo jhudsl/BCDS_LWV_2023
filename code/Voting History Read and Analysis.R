@@ -6,7 +6,7 @@ library("tidyr")
 dir <- "../"
 
 # election to analyze
-election <- "2022 GUBERNATORIAL GENERAL ELECTION"
+election <- "2020 PRESIDENTIAL PRIMARY ELECTION"
 
 # read voting history file (.tsv)
 voter_data <- readLines(paste0(dir, "data/input/private/Maryland/Maryland_2022_Voting_History"))
@@ -24,16 +24,15 @@ finaldata$`Election Date` <- as.Date(finaldata$`Election Date`, format = "%m/%d/
 # class(finaldata$`Election Date`) # checks that the dates are the Date class
 # unique(finaldata$`Election Date`) # checks the unique number of election dates
 
+#Age groups 18-29, 30-49, 50-64, 65+
 finaldata <- finaldata %>%
   mutate(AGE = floor(as.numeric(difftime(`Election Date`, DOB, units = "days") / 365.25))) ### creates AGE variable; age rounded down
 finaldata <- finaldata %>%
   mutate(AGE_GROUP = case_when(AGE < 16 ~ "< 16",
                                AGE = 16 & AGE < 18 ~ "16-17",
-                               AGE >=18 & AGE <25 ~ "18-24",
-                               AGE >=25 & AGE <35 ~ "25-34",
-                               AGE >=35 & AGE <45 ~ "35-44",
-                               AGE >=45 & AGE <55 ~ "45-54",
-                               AGE >=55 & AGE <65 ~ "55-64",
+                               AGE >=18 & AGE <29 ~ "18-29",
+                               AGE >=30 & AGE <49 ~ "30-49",
+                               AGE >=50 & AGE <64 ~ "50-64",
                                AGE >=65 ~ "65+")) ### creating age group variable
 
 # save csv
@@ -103,4 +102,4 @@ history_age_wide <-spread(history_age, AGE_GROUP, n)
 sex_and_age_counts_by_precinct <- merge(history_sex_wide, history_age_wide)
 
 # save csv(s)
-write_csv(sex_and_age_counts_by_precinct, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/sex_and_age_counts_by_precinct.csv"))
+write.csv(sex_and_age_counts_by_precinct, "sex_and_age_counts_by_precinct_2020_primary.csv")
