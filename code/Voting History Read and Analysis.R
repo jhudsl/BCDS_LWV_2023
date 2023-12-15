@@ -3,7 +3,6 @@ library("data.table")
 library("dplyr")
 library("tidyr")
 
-
 voter_data<-readLines("Maryland_2022_Voting_History")
 voter_data<-gsub("\t\t","\tNA\t",voter_data)
 voter_data <- fread(text=voter_data, sep="\t", header=TRUE)
@@ -81,7 +80,7 @@ history__by_ward1 <- finalbaltimoredata %>%
 
 #Get gender counts
 history_gender<-finalbaltimoredata %>%
-  group_by(PRECINCT) %>%
+  group_by(PRECINCT, COUNCILMANIC_DISTRICTS, LEGISLATIVE_DISTRICTS) %>%
   count(GENDER)
 
 #Convert to wide form
@@ -89,7 +88,7 @@ history_gender_wide <-spread(history_gender, GENDER, n)
 
 #By PRECINCT
 history_age<-finalbaltimoredata %>%
-  group_by(PRECINCT) %>%
+  group_by(PRECINCT, COUNCILMANIC_DISTRICTS, LEGISLATIVE_DISTRICTS) %>%
   count(AGE_GROUP)
 
 #Convert long to wide format
@@ -98,7 +97,7 @@ history_age_wide <-spread(history_age, AGE_GROUP, n)
 #join gender and age count by precinct data 
 finalhistorybreakdowndata<-merge(history_gender_wide, history_age_wide)
 
-write.csv(finalhistorybreakdowndata, file="Maryland_2022_Gen_Election_By_Precinct.csv")
+write.csv(finalhistorybreakdowndata, file="Sex_and_Age_Counts_by_Precinct_Council_Leg_Baltimore_2022.csv")
 
 ###ignore code, since added age above
 #Age
