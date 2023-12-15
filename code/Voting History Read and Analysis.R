@@ -84,7 +84,7 @@ finalbaltimoredata$GENDER[finalbaltimoredata$GENDER=="U"] <- NA
 
 # Get sex counts by precinct
 history_sex <- finalbaltimoredata %>%
-  group_by(PRECINCT) %>%
+  group_by(PRECINCT, COUNCILMANIC_DISTRICTS, LEGISLATIVE_DISTRICTS) %>%
   count(GENDER)
 
 # Convert to wide form
@@ -92,14 +92,14 @@ history_sex_wide <-spread(history_sex, GENDER, n)
 
 # Get age group counts by precinct
 history_age <- finalbaltimoredata %>%
-  group_by(PRECINCT) %>%
+  group_by(PRECINCT, COUNCILMANIC_DISTRICTS, LEGISLATIVE_DISTRICTS) %>%
   count(AGE_GROUP)
 
 # Convert long to wide format
 history_age_wide <-spread(history_age, AGE_GROUP, n)
 
 # join sex and age count by precinct data 
-sex_and_age_counts_by_precinct <- merge(history_sex_wide, history_age_wide)
+sex_and_age_counts_by_precinct <- merge(history_sex_wide, history_age_wide, by="PRECINCT")
 
 # save csv(s)
 write.csv(sex_and_age_counts_by_precinct, "sex_and_age_counts_by_precinct_2020_primary.csv")
