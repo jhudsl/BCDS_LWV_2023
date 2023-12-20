@@ -4,18 +4,18 @@ library(tidyverse) # for piping (%>%) and various functions
 dir <- "../"
 
 # read in data from data/intermediate/ folder
-turnout_results_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_results.csv"))
-ballot_types_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_by_ballot_type.csv"))
-candidate_results_by_ballot_type_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/candidate_results_by_ballot_type.csv"))
-voter_demographics_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/sex_and_age_counts_by_precinct.csv"))
-voter_genders_2022registered <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/registered_voters_gender_2022.csv"))
+# turnout_results_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_results.csv"))
+# ballot_types_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/turnout_by_ballot_type.csv"))
+# candidate_results_by_ballot_type_2022general <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/candidate_results_by_ballot_type.csv"))
+voter_demographics_2020primary <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/sex_and_age_counts_by_precinct_2020_primary.csv"))
+# voter_genders_2022registered <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/registered_voters_gender_2022.csv"))
 # to do: voter_ages_2022registered and rename gender to sex
 adjusted_adult_population_2020 <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/adjusted_adult_population_2020.csv"))
 
 # pivot long data frame(s) to wide
-turnout_results_2022general <- turnout_results_2022general %>%
-  pivot_wider(names_from = Variable,
-              values_from = Count)
+# turnout_results_2022general <- turnout_results_2022general %>%
+#   pivot_wider(names_from = Variable,
+#               values_from = Count)
 
 # remove variables that are not of interest
 # i.e., remove race but keep Hispanic/Latino to help organizations decide if they need more services in Spanish
@@ -41,6 +41,8 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
 # [1] 296
 # > length(unique(candidate_results_by_ballot_type_2022general$Precinct))
 # [1] 296
+# > length(unique(voter_demographics_2020primary$PRECINCT))
+# [1] 295
 # > length(unique(adjusted_adult_population_2020$Precinct))
 # [1] 272
 
@@ -50,26 +52,27 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
 # [1] "012-013" "013-013" "020-012" "021-005" "025-018" ## hmm, this seems to be missing some
 
 # clean voter demographic data
-voter_demographics_2022general <- voter_demographics_2022general %>%
-  select(-c(`...1`)) %>% # remove first column, which is row number
-  rename(Precinct = PRECINCT, Councilmanic = COUNCILMANIC_DISTRICTS, Legislative = LEGISLATIVE_DISTRICTS,
-         Voted_Female = `0`, Voted_Male = `1`, Voted_UnknownSex = `<NA>`,
-         Voted_16to17 = `16-17`, Voted_18to24 = `18-24`, Voted_25to34 = `25-34`, Voted_35to44 = `35-44`, Voted_45to54 = `45-54`, Voted_55to64 = `55-64`, Voted_65plus = `65+`) %>%
+voter_demographics_2020primary <- voter_demographics_2020primary %>%
+  select(-c(`...1`, LEGISLATIVE_DISTRICTS)) %>% # remove first column, which is row number; remove 2022 legislative district since we need 2020
+  rename(Precinct = PRECINCT, Councilmanic = COUNCILMANIC_DISTRICTS,
+         Voted_Female = `0`, Voted_Male = `1`, Voted_UnknownSex = `<NA>.x`,
+         Voted_16to17 = `16-17`, Voted_18to29 = `18-29`, Voted_30to49 = `30-49`, Voted_50to64 = `50-64`, Voted_65plus = `65+`, Voted_UnknownAge = `<NA>.y`) %>%
   mutate(Precinct = ifelse(nchar(Precinct) == 4, paste0("00", Precinct), paste0("0", Precinct))) %>% # zero-pad the precinct
   mutate(Precinct = paste0(substr(Precinct, 1, 3), "-", substr(Precinct, 4, 6))) %>% # use {3 digit ward}-{3 digit precinct within ward} naming convention for precinct
-  mutate(Voted_16to17 = ifelse(is.na(Voted_16to17), 0, Voted_16to17))
+  mutate(Voted_16to17 = ifelse(is.na(Voted_16to17), 0, Voted_16to17),
+         Voted_UnknownSex = ifelse(is.na(Voted_UnknownSex), 0, Voted_UnknownSex))
 
 
 # merge, keeping all precincts so that neither total population nor total votes cast get lost when aggregating precincts into districts later
 # (so some precincts will have people living there but not votes cast)
-# note that [state] legislative districts changed from 2020 to 2022, so use 2022 when possible
-# precincts did not change from 2020 to 2022, to the best of our knowledge
-merged_data <- full_join(ballot_types_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
-  mutate(Legislative = ifelse(!is.na(Legislative.x), Legislative.x, Legislative.y)) %>%
-  mutate(Legislative.x = NULL,
-         Legislative.y = NULL) %>%
-  full_join(turnout_results_2022general, by = c("Precinct")) %>%
-  full_join(voter_demographics_2022general, by = c("Precinct", "Legislative"))
+merged_data <- full_join(voter_demographics_2020primary, adjusted_adult_population_2020, by = "Precinct") %>%
+  mutate(Precinct = paste0(substr(Precinct, 2, 7))) # use {2 digit ward}-{3 digit precinct within ward} naming convention for precinct
+
+
+# merged_data <- full_join(ballot_types_2022general, adjusted_adult_population_2020, by = "Precinct") %>%
+#   full_join(turnout_results_2022general, by = c("Precinct")) %>%
+#   full_join(voter_demographics_2020primary, by = c("Precinct")) %>%
+#   mutate(Precinct = paste0(substr(Precinct, 2, 3), "-", substr(Precinct, 4, 6))) # use {2 digit ward}-{3 digit precinct within ward} naming convention for precinct
 
 # save merged dataset
-write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/general_election_2022/merged_data_precincts.csv"))
+write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/merged_data_precincts.csv"))
