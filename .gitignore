@@ -4,3 +4,4 @@
 # Ignore logger files from Mac or from R
 *.DS_Store
 *.Rhistory
+*.RData
