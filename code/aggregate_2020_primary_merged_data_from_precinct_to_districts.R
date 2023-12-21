@@ -4,16 +4,17 @@ library(tidyverse)
 dir <- "../"
 
 # location to save the processed data (at the end of this script)
-final_data_dir_legislative_districts <- paste0(dir, "data/final/public/Baltimore_City/primary_election_2020/")
-final_data_dir_councilmanic_districts <- paste0(dir, "data/final/public/Baltimore_City/primary_election_2020/")
-final_data_path_legislative_districts <- paste0(final_data_dir_legislative_districts, "merged_data_legislative_districts.csv")
-final_data_path_councilmanic_districts <- paste0(final_data_dir_councilmanic_districts, "merged_data_councilmanic_districts.csv")
+legislative_district_data_dir <- paste0(dir, "data/final/public/Baltimore_City/primary_election_2020/")
+councilmanic_district_data_dir <- paste0(dir, "data/final/public/Baltimore_City/primary_election_2020/")
+
+legislative_district_data_path <- paste0(legislative_district_data_dir, "merged_data_legislative_districts.csv")
+councilmanic_district_data_path <- paste0(councilmanic_district_data_dir, "merged_data_councilmanic_districts.csv")
 
 # read in data
 precinct_data <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/merged_data_by_precinct.csv"))
-city_council_election_results <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_candidate_ballot_type_and_councilmanic_district.csv"))
+# city_council_election_results <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_candidate_ballot_type_and_councilmanic_district.csv"))
 city_council_election_results_aggregated <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_ballot_type_and_councilmanic_district.csv"))
-city_council_election_results_wide <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_candidate_ballot_type_and_councilmanic_district_wide.csv"))
+# city_council_election_results_wide <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_candidate_ballot_type_and_councilmanic_district_wide.csv"))
 
 # aggregate from precinct to [state] legislative district
 # to do: Registered_of_Adjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Adjusted_Total_Adult_Pop * 100, 2),
@@ -109,12 +110,12 @@ councilmanic_district_data <- councilmanic_district_data %>%
   full_join(city_council_results, by = "Councilmanic")
 
 # save aggregated dataset(s)
-if (!dir.exists(final_data_dir_legislative_districts)){
-  dir.create(final_data_dir_legislative_districts)
+if (!dir.exists(legislative_district_data_dir)){
+  dir.create(legislative_district_data_dir)
 }
-if (!dir.exists(final_data_dir_councilmanic_districts)){
-  dir.create(final_data_dir_councilmanic_districts)
+if (!dir.exists(councilmanic_district_data_dir)){
+  dir.create(councilmanic_district_data_dir)
 }
 
-write_csv(legislative_district_data, file = final_data_path_legislative_districts)
-write_csv(councilmanic_district_data, file = final_data_path_councilmanic_districts)
+write_csv(legislative_district_data, file = legislative_district_data_path)
+write_csv(councilmanic_district_data, file = councilmanic_district_data_path)
