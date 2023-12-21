@@ -12,6 +12,8 @@ voter_demographics_2020primary <- read_csv(file = paste0(dir, "data/intermediate
 # to do: voter_ages_2022registered and rename gender to sex
 adjusted_adult_population_2020 <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/adjusted_adult_population_2020.csv"))
 
+# to do: maybe get registered voters from voter_genders_2020registered or voter_ages_2020registered
+
 # pivot long data frame(s) to wide
 # turnout_results_2022general <- turnout_results_2022general %>%
 #   pivot_wider(names_from = Variable,
@@ -75,4 +77,4 @@ merged_data <- full_join(voter_demographics_2020primary, adjusted_adult_populati
 #   mutate(Precinct = paste0(substr(Precinct, 2, 3), "-", substr(Precinct, 4, 6))) # use {2 digit ward}-{3 digit precinct within ward} naming convention for precinct
 
 # save merged dataset
-write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/merged_data_precincts.csv"))
+write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/merged_data_by_precinct.csv"))

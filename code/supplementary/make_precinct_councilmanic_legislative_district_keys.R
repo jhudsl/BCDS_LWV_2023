@@ -1,5 +1,7 @@
 library(tidyverse)
 
+### Warning: this script doesn't handle redistricting correctly; to do: fix it
+
 # location of this repository on user's computer
 dir <- "../"
 

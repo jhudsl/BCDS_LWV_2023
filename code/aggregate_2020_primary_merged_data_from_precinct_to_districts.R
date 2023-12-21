@@ -23,11 +23,9 @@ legislative_district_data <- precinct_data %>%
             Voted_Male = sum(Voted_Male, na.rm = T),
             Voted_UnknownSex = sum(Voted_UnknownSex, na.rm = T),
             Voted_16to17 = sum(Voted_16to17, na.rm = T),
-            Voted_18to24 = sum(Voted_18to24, na.rm = T),
-            Voted_25to34 = sum(Voted_25to34, na.rm = T),
-            Voted_35to44 = sum(Voted_35to44, na.rm = T),
-            Voted_45to54 = sum(Voted_45to54, na.rm = T),
-            Voted_55to64 = sum(Voted_55to64, na.rm = T),
+            Voted_18to29 = sum(Voted_18to29, na.rm = T),
+            Voted_30to49 = sum(Voted_30to49, na.rm = T),
+            Voted_50to64 = sum(Voted_50to64, na.rm = T),
             Voted_65plus = sum(Voted_65plus, na.rm = T),
             .by = Legislative) %>%
   mutate(Registered_of_Adjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Adjusted_Total_Adult_Pop * 100, 2),
@@ -43,11 +41,9 @@ legislative_district_data <- precinct_data %>%
          Male_of_Voted = round(Voted_Male / `BALLOTS CAST - TOTAL` * 100, 2),
          UnknownSex_of_Voted = round(Voted_UnknownSex / `BALLOTS CAST - TOTAL` * 100, 2),
          Ages16to17_of_Voted = round(Voted_16to17 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages18to24_of_Voted = round(Voted_18to24 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages25to34_of_Voted = round(Voted_25to34 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages35to44_of_Voted = round(Voted_35to44 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages45to54_of_Voted = round(Voted_45to54 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages55to64_of_Voted = round(Voted_55to64 / `BALLOTS CAST - TOTAL` * 100, 2),
+         Ages18to29_of_Voted = round(Voted_18to29 / `BALLOTS CAST - TOTAL` * 100, 2),
+         Ages30to49_of_Voted = round(Voted_30to49 / `BALLOTS CAST - TOTAL` * 100, 2),
+         Ages50to64_of_Voted = round(Voted_50to64 / `BALLOTS CAST - TOTAL` * 100, 2),
          Ages65plus_of_Voted = round(Voted_65plus / `BALLOTS CAST - TOTAL` * 100, 2))
 
 # aggregate from precinct to city council = councilmanic district
@@ -67,11 +63,9 @@ councilmanic_district_data <- precinct_data %>%
             Voted_Male = sum(Voted_Male, na.rm = T),
             Voted_UnknownSex = sum(Voted_UnknownSex, na.rm = T),
             Voted_16to17 = sum(Voted_16to17, na.rm = T),
-            Voted_18to24 = sum(Voted_18to24, na.rm = T),
-            Voted_25to34 = sum(Voted_25to34, na.rm = T),
-            Voted_35to44 = sum(Voted_35to44, na.rm = T),
-            Voted_45to54 = sum(Voted_45to54, na.rm = T),
-            Voted_55to64 = sum(Voted_55to64, na.rm = T),
+            Voted_18to29 = sum(Voted_18to29, na.rm = T),
+            Voted_30to49 = sum(Voted_30to49, na.rm = T),
+            Voted_50to64 = sum(Voted_50to64, na.rm = T),
             Voted_65plus = sum(Voted_65plus, na.rm = T),
             .by = Councilmanic) %>%
   drop_na(Councilmanic)
@@ -88,11 +82,9 @@ councilmanic_district_data <- precinct_data %>%
          Male_of_Voted = round(Voted_Male / `BALLOTS CAST - TOTAL` * 100, 2),
          UnknownSex_of_Voted = round(Voted_UnknownSex / `BALLOTS CAST - TOTAL` * 100, 2),
          Ages16to17_of_Voted = round(Voted_16to17 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages18to24_of_Voted = round(Voted_18to24 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages25to34_of_Voted = round(Voted_25to34 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages35to44_of_Voted = round(Voted_35to44 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages45to54_of_Voted = round(Voted_45to54 / `BALLOTS CAST - TOTAL` * 100, 2),
-         Ages55to64_of_Voted = round(Voted_55to64 / `BALLOTS CAST - TOTAL` * 100, 2),
+         Ages18to29_of_Voted = round(Voted_18to29 / `BALLOTS CAST - TOTAL` * 100, 2),
+         Ages30to49_of_Voted = round(Voted_30to49 / `BALLOTS CAST - TOTAL` * 100, 2),
+         Ages50to64_of_Voted = round(Voted_50to64 / `BALLOTS CAST - TOTAL` * 100, 2),
          Ages65plus_of_Voted = round(Voted_65plus / `BALLOTS CAST - TOTAL` * 100, 2))
 
 # save aggregated dataset(s)
