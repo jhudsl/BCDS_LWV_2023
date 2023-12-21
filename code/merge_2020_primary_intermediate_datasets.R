@@ -38,7 +38,7 @@ age_and_sex_of_voted_2020_primary <- age_and_sex_of_voted_2020_primary %>%
   mutate(Voted_16to17 = ifelse(is.na(Voted_16to17), 0, Voted_16to17),
          Voted_UnknownAge = ifelse(is.na(Voted_UnknownAge), 0, Voted_UnknownAge),
          Voted_UnknownSex = ifelse(is.na(Voted_UnknownSex), 0, Voted_UnknownSex)) %>%
-  mutate(Voted_Total = Voted_16to17 + Voted_18to29 + Voted_30to49 + Voted_50to64 + Voted_65plus + Voted_UnknownAge, # checked: equivalent to Voted_Female + Voted_Male + Voted_UnknownSex
+  mutate(Voted_Total = Voted_16to17 + Voted_18to29 + Voted_30to49 + Voted_50to64 + Voted_65plus + Voted_UnknownAge, # checked: equivalent to Voted_Female + Voted_Male + Voted_UnknownSex; must be 17+ to vote in primary (must be 18 by time of general election); luckily no one in dataset was recorded as under 16 and voted
          Voted_Adults = Voted_18to29 + Voted_30to49 + Voted_50to64 + Voted_65plus)
 
 # reformat registered demographic data
