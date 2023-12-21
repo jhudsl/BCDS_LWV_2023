@@ -29,6 +29,7 @@ adjusted_adult_population_2020 <- adjusted_adult_population_2020 %>%
             Adjusted_Multiracial_Adult_Pop))
 
 # clean voter demographic data
+voter_demographics_2020primary <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/sex_and_age_counts_by_precinct_2020_primary.csv"))
 voter_demographics_2020primary <- voter_demographics_2020primary %>%
   select(-c(`...1`, LEGISLATIVE_DISTRICTS)) %>% # remove first column, which is row number; remove 2022 legislative district since we need 2020
   rename(Precinct = PRECINCT, Councilmanic = COUNCILMANIC_DISTRICTS,
@@ -37,7 +38,9 @@ voter_demographics_2020primary <- voter_demographics_2020primary %>%
   mutate(Precinct = ifelse(nchar(Precinct) == 4, paste0("00", Precinct), paste0("0", Precinct))) %>% # zero-pad the precinct
   mutate(Precinct = paste0(substr(Precinct, 1, 3), "-", substr(Precinct, 4, 6))) %>% # use {3 digit ward}-{3 digit precinct within ward} naming convention for precinct
   mutate(Voted_16to17 = ifelse(is.na(Voted_16to17), 0, Voted_16to17),
-         Voted_UnknownSex = ifelse(is.na(Voted_UnknownSex), 0, Voted_UnknownSex))
+         Voted_UnknownAge = ifelse(is.na(Voted_UnknownAge), 0, Voted_UnknownAge),
+         Voted_UnknownSex = ifelse(is.na(Voted_UnknownSex), 0, Voted_UnknownSex)) %>%
+  mutate(Voted_Total = Voted_Female + Voted_Male + Voted_UnknownSex) # checked: equivalent to Voted_16to17 + Voted_18to29 + Voted_30to49 + Voted_50to64 + Voted_65plus + Voted_UnknownAge
 
 # # check which precincts are present in each dataset
 # > length(unique(voter_demographics_2020primary$PRECINCT))
