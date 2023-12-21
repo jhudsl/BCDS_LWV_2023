@@ -94,7 +94,7 @@ sex_of_registered_2020_primary <- sex_of_registered_2020_primary %>%
 merged_data <- full_join(age_and_sex_of_voted_2020_primary, adjusted_adult_population_2020, by = "Precinct") %>%
   full_join(sex_of_registered_2020_primary) %>%
   full_join(age_of_registered_2020_primary) %>%
-  mutate(Precinct = paste0(substr(Precinct, 2, 7))) # use {2 digit ward}-{3 digit precinct within ward} naming convention for precinct
+  mutate(Precinct = paste0(substr(Precinct, 2, 7))) # use {2 digit ward}-{3 digit precinct within ward} naming convention for precinct, because that's what the shapefile uses
 
 # save merged dataset
 write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/merged_data_by_precinct.csv"))
