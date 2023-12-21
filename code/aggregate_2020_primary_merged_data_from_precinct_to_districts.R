@@ -17,13 +17,12 @@ city_council_election_results_aggregated <- read_csv(file = paste0(dir, "data/in
 # city_council_election_results_wide <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_candidate_ballot_type_and_councilmanic_district_wide.csv"))
 
 # aggregate from precinct to [state] legislative district
-# to do: Registered_of_Adjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Adjusted_Total_Adult_Pop * 100, 2),
-# to do: Voted_of_Registered = round(Voted_Total / `REGISTERED VOTERS - TOTAL` * 100, 2),
 legislative_district_data <- precinct_data %>%
   summarize(Adjusted_Total_Pop = sum(Adjusted_Total_Pop, na.rm = T),
             Adjusted_Total_Adult_Pop = sum(Adjusted_Total_Adult_Pop, na.rm = T),
             Adjusted_Hispanic_Latino_Adult_Pop = sum(Adjusted_Hispanic_Latino_Adult_Pop, na.rm = T),
             Voted_Total = sum(Voted_Total, na.rm = T),
+            Voted_Adults = sum(Voted_Adults, na.rm = T),
             Voted_Female = sum(Voted_Female, na.rm = T),
             Voted_Male = sum(Voted_Male, na.rm = T),
             Voted_UnknownSex = sum(Voted_UnknownSex, na.rm = T),
@@ -33,10 +32,24 @@ legislative_district_data <- precinct_data %>%
             Voted_50to64 = sum(Voted_50to64, na.rm = T),
             Voted_65plus = sum(Voted_65plus, na.rm = T),
             Voted_UnknownAge = sum(Voted_UnknownAge, na.rm = T),
+            Registered_Total = sum(Registered_Total, na.rm = T),
+            Registered_Adults = sum(Registered_Adults, na.rm = T),
+            Registered_Female = sum(Registered_Female, na.rm = T),
+            Registered_Male = sum(Registered_Male, na.rm = T),
+            Registered_UnknownSex = sum(Registered_UnknownSex, na.rm = T),
+            Registered_16to17 = sum(Registered_16to17, na.rm = T),
+            Registered_18to29 = sum(Registered_18to29, na.rm = T),
+            Registered_30to49 = sum(Registered_30to49, na.rm = T),
+            Registered_50to64 = sum(Registered_50to64, na.rm = T),
+            Registered_65plus = sum(Registered_65plus, na.rm = T),
+            Registered_UnknownAge = sum(Registered_UnknownAge, na.rm = T),
             .by = Legislative) %>%
   drop_na(Legislative) %>%
-  mutate(Voted_of_Adjusted_Adults = round(Voted_Total / Adjusted_Total_Adult_Pop * 100, 2),
-         Hispanic_Latino_of_Adjusted_Adults = round(Adjusted_Hispanic_Latino_Adult_Pop / Adjusted_Total_Adult_Pop * 100, 2),
+  mutate(Legislative = Legislative,
+         Voted_of_Registered_Adults = round(Voted_Adults / Registered_Adults * 100, 2),
+         Voted_of_Adjusted_Total_Adults = round(Voted_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Registered_of_Adjusted_Total_Adults = round(Registered_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Hispanic_Latino_of_Total_Adjusted_Adults = round(Adjusted_Hispanic_Latino_Adult_Pop / Adjusted_Total_Adult_Pop * 100, 2),
          Female_of_Voted = round(Voted_Female / Voted_Total * 100, 2),
          Male_of_Voted = round(Voted_Male / Voted_Total * 100, 2),
          UnknownSex_of_Voted = round(Voted_UnknownSex / Voted_Total * 100, 2),
@@ -45,16 +58,25 @@ legislative_district_data <- precinct_data %>%
          Ages30to49_of_Voted = round(Voted_30to49 / Voted_Total * 100, 2),
          Ages50to64_of_Voted = round(Voted_50to64 / Voted_Total * 100, 2),
          Ages65plus_of_Voted = round(Voted_65plus / Voted_Total * 100, 2),
-         UnknownAge_of_Voted = round(Voted_UnknownAge / Voted_Total * 100, 2))
+         UnknownAge_of_Voted = round(Voted_UnknownAge / Voted_Total * 100, 2),
+         Female_of_Registered = round(Registered_Female / Registered_Total * 100, 2),
+         Male_of_Registered = round(Registered_Male / Registered_Total * 100, 2),
+         UnknownSex_of_Registered = round(Registered_UnknownSex / Registered_Total * 100, 2),
+         Ages16to17_of_Registered = round(Registered_16to17 / Registered_Total * 100, 2),
+         Ages18to29_of_Registered = round(Registered_18to29 / Registered_Total * 100, 2),
+         Ages30to49_of_Registered = round(Registered_30to49 / Registered_Total * 100, 2),
+         Ages50to64_of_Registered = round(Registered_50to64 / Registered_Total * 100, 2),
+         Ages65plus_of_Registered = round(Registered_65plus / Registered_Total * 100, 2),
+         UnknownAge_of_Registered = round(Registered_UnknownAge / Registered_Total * 100, 2),
+         .keep = "none") # delete all other columns
 
 # aggregate from precinct to city council = councilmanic district
-# to do: Registered_of_Adjusted_Adults = round(`REGISTERED VOTERS - TOTAL` / Adjusted_Total_Adult_Pop * 100, 2),
-# to do: Voted_of_Registered = round(Voted_Total / `REGISTERED VOTERS - TOTAL` * 100, 2),
 councilmanic_district_data <- precinct_data %>%
   summarize(Adjusted_Total_Pop = sum(Adjusted_Total_Pop, na.rm = T),
             Adjusted_Total_Adult_Pop = sum(Adjusted_Total_Adult_Pop, na.rm = T),
             Adjusted_Hispanic_Latino_Adult_Pop = sum(Adjusted_Hispanic_Latino_Adult_Pop, na.rm = T),
             Voted_Total = sum(Voted_Total, na.rm = T),
+            Voted_Adults = sum(Voted_Adults, na.rm = T),
             Voted_Female = sum(Voted_Female, na.rm = T),
             Voted_Male = sum(Voted_Male, na.rm = T),
             Voted_UnknownSex = sum(Voted_UnknownSex, na.rm = T),
@@ -64,10 +86,25 @@ councilmanic_district_data <- precinct_data %>%
             Voted_50to64 = sum(Voted_50to64, na.rm = T),
             Voted_65plus = sum(Voted_65plus, na.rm = T),
             Voted_UnknownAge = sum(Voted_UnknownAge, na.rm = T),
+            Registered_Total = sum(Registered_Total, na.rm = T),
+            Registered_Adults = sum(Registered_Adults, na.rm = T),
+            Registered_Female = sum(Registered_Female, na.rm = T),
+            Registered_Male = sum(Registered_Male, na.rm = T),
+            Registered_UnknownSex = sum(Registered_UnknownSex, na.rm = T),
+            Registered_16to17 = sum(Registered_16to17, na.rm = T),
+            Registered_18to29 = sum(Registered_18to29, na.rm = T),
+            Registered_30to49 = sum(Registered_30to49, na.rm = T),
+            Registered_50to64 = sum(Registered_50to64, na.rm = T),
+            Registered_65plus = sum(Registered_65plus, na.rm = T),
+            Registered_UnknownAge = sum(Registered_UnknownAge, na.rm = T),
             .by = Councilmanic) %>%
   drop_na(Councilmanic) %>%
-  mutate(Voted_of_Adjusted_Adults = round(Voted_Total / Adjusted_Total_Adult_Pop * 100, 2),
-         Hispanic_Latino_of_Adjusted_Adults = round(Adjusted_Hispanic_Latino_Adult_Pop / Adjusted_Total_Adult_Pop * 100, 2),
+  filter(Councilmanic != "000") %>%
+  mutate(Councilmanic = Councilmanic,
+         Voted_of_Registered_Adults = round(Voted_Adults / Registered_Adults * 100, 2),
+         Voted_of_Adjusted_Total_Adults = round(Voted_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Registered_of_Adjusted_Total_Adults = round(Registered_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Hispanic_Latino_of_Total_Adjusted_Adults = round(Adjusted_Hispanic_Latino_Adult_Pop / Adjusted_Total_Adult_Pop * 100, 2),
          Female_of_Voted = round(Voted_Female / Voted_Total * 100, 2),
          Male_of_Voted = round(Voted_Male / Voted_Total * 100, 2),
          UnknownSex_of_Voted = round(Voted_UnknownSex / Voted_Total * 100, 2),
@@ -76,7 +113,17 @@ councilmanic_district_data <- precinct_data %>%
          Ages30to49_of_Voted = round(Voted_30to49 / Voted_Total * 100, 2),
          Ages50to64_of_Voted = round(Voted_50to64 / Voted_Total * 100, 2),
          Ages65plus_of_Voted = round(Voted_65plus / Voted_Total * 100, 2),
-         UnknownAge_of_Voted = round(Voted_UnknownAge / Voted_Total * 100, 2))
+         UnknownAge_of_Voted = round(Voted_UnknownAge / Voted_Total * 100, 2),
+         Female_of_Registered = round(Registered_Female / Registered_Total * 100, 2),
+         Male_of_Registered = round(Registered_Male / Registered_Total * 100, 2),
+         UnknownSex_of_Registered = round(Registered_UnknownSex / Registered_Total * 100, 2),
+         Ages16to17_of_Registered = round(Registered_16to17 / Registered_Total * 100, 2),
+         Ages18to29_of_Registered = round(Registered_18to29 / Registered_Total * 100, 2),
+         Ages30to49_of_Registered = round(Registered_30to49 / Registered_Total * 100, 2),
+         Ages50to64_of_Registered = round(Registered_50to64 / Registered_Total * 100, 2),
+         Ages65plus_of_Registered = round(Registered_65plus / Registered_Total * 100, 2),
+         UnknownAge_of_Registered = round(Registered_UnknownAge / Registered_Total * 100, 2),
+         .keep = "none") # delete all other columns
 
 # clean city council election results, then merge
 city_council_results_combined_parties <- city_council_election_results_aggregated %>%
