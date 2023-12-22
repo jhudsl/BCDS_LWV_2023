@@ -18,7 +18,7 @@ While compiling the data needed for our project, we came across a variety of dat
 
 ## Description of Files
 
-- `code/`
+- `code/` (When running our code, we advise that the user follow the order below)
   
     1. `download_public_data.R`: Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
     
@@ -34,6 +34,7 @@ While compiling the data needed for our project, we came across a variety of dat
     8. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
     9. `make_precinct_councilmanic_legislative_district_keys.R`
     10. `append_precinct_to_2020_primary_aggregated_merged_data.R`
+    11. `Merge Files for Tableau.R` (to do: move this from `data/final/` to `code` and update the filepaths in the script
     
 Ignore the below for now:
 
@@ -74,8 +75,12 @@ Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot]
 
 ## Miscellaneous Notes
 
-Limitations of our estimates: people who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland) but it's hard to estimate that at the precinct, ward, legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City.
+**Limitations of Our Estimates**
 
-When requesting voter registration files, date of birth (DOB) needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
+- People who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland) but it's hard to estimate that at the precinct, ward, legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City.
 
-Voter ID duplicates exist in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absenteee more than once. A person's voter ID does not change across elections (i.e., across time).
+**Data Tips**
+
+- When requesting voter registration files, date of birth (DOB) needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
+
+- Voter ID duplicates exist in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absenteee more than once. A person's voter ID does not change across elections (i.e., across time).
