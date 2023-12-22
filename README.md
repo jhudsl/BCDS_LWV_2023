@@ -10,6 +10,7 @@
 
 **Overview**: 
 In this GitHub repository, we share code and files related to our project visualizing recent voter turnout in the June 2, 2020 primary election in Baltimore City. Our final product is an interactive dashboard hosted by Tableau Desktop [here]().
+<!-- We also wrote up Project Resources and Gap Analysis/Summary of Our Work -->
 
 Our project was inspired by [this dashboard](https://public.tableau.com/app/profile/michael.dunphy8764/viz/BaltimoreVotesCoalitionDemo/Dashboard) created by Michael Dunphy, Dr. Carrie Wright, Wenhui Yang, Eliane Mitchell, and collaborators at the Baltimore Votes Coalition in the 2022 Democracy Data Science Hackathon. The GitHub repository for their dashboard is [here](https://github.com/carriewright11/Party_at_the_polls/tree/main).
 
