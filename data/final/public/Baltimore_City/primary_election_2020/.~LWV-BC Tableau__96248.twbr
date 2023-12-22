@@ -1341,51 +1341,51 @@
               <bucket>44</bucket>
             </map>
           </encoding>
-          <encoding attr='color' field='[sum:Council_Dist_Councilmanic:ok]' palette='color_blind_10_0' type='palette'>
-            <map to='#1170aa'>
+          <encoding attr='color' field='[sum:Council_Dist_Councilmanic:ok]' palette='tableau20_10_0' type='palette'>
+            <map to='#499894'>
+              <bucket>8</bucket>
+            </map>
+            <map to='#4e79a7'>
               <bucket>%null%</bucket>
             </map>
-            <map to='#1170aa'>
-              <bucket>10</bucket>
-            </map>
-            <map to='#57606c'>
-              <bucket>3</bucket>
-            </map>
-            <map to='#57606c'>
-              <bucket>13</bucket>
-            </map>
-            <map to='#5fa2ce'>
+            <map to='#59a14f'>
               <bucket>4</bucket>
             </map>
-            <map to='#5fa2ce'>
-              <bucket>14</bucket>
-            </map>
-            <map to='#7b848f'>
-              <bucket>6</bucket>
-            </map>
-            <map to='#a3acb9'>
-              <bucket>2</bucket>
-            </map>
-            <map to='#a3acb9'>
+            <map to='#79706e'>
               <bucket>12</bucket>
             </map>
-            <map to='#a3cce9'>
-              <bucket>7</bucket>
-            </map>
-            <map to='#c85200'>
-              <bucket>5</bucket>
-            </map>
-            <map to='#c8d0d9'>
+            <map to='#86bcb6'>
               <bucket>9</bucket>
             </map>
-            <map to='#fc7d0b'>
+            <map to='#8cd17d'>
+              <bucket>5</bucket>
+            </map>
+            <map to='#a0cbe8'>
               <bucket>1</bucket>
             </map>
-            <map to='#fc7d0b'>
+            <map to='#b6992d'>
+              <bucket>6</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>13</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>14</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>10</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>7</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>2</bucket>
+            </map>
+            <map to='#ff9d9a'>
               <bucket>11</bucket>
             </map>
-            <map to='#ffbc79'>
-              <bucket>8</bucket>
+            <map to='#ffbe7d'>
+              <bucket>3</bucket>
             </map>
           </encoding>
           <encoding attr='color' field='[:Measure Names]' type='palette'>
@@ -1506,6 +1506,16 @@
   <mapsources>
     <mapsource name='Tableau' />
   </mapsources>
+  <actions>
+    <action caption='Highlight 1 (generated)' name='[Action1_7FF34F3B229941539D754FFF7866EBFB]'>
+      <activation auto-clear='true' type='on-select' />
+      <source dashboard='2020 CD' type='sheet' />
+      <command command='tsc:brush'>
+        <param name='field-captions' value='SUM(Council Dist Councilmanic)' />
+        <param name='target' value='2020 CD' />
+      </command>
+    </action>
+  </actions>
   <worksheets>
     <worksheet name='16-17 Registered, Council Dist'>
       <table>
@@ -2928,8 +2938,8 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.094heq808h3f3012tapov0c4oz6s].[Longitude (generated)]' field-type='quantitative' max='-8506004.880241394' min='-8551964.9689943735' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.094heq808h3f3012tapov0c4oz6s].[Latitude (generated)]' field-type='quantitative' max='4777653.7396338079' min='4752621.012133766' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.094heq808h3f3012tapov0c4oz6s].[Longitude (generated)]' field-type='quantitative' max='-8502217.4439978618' min='-8555342.8384412061' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.094heq808h3f3012tapov0c4oz6s].[Latitude (generated)]' field-type='quantitative' max='4778094.2020696355' min='4749264.6658206824' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='legend-title-text'>
             <format attr='color' field='[federated.094heq808h3f3012tapov0c4oz6s].[sum:Council_Dist_Councilmanic:ok]' value='Council Districts'>
@@ -4789,8 +4799,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='800' minheight='800' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='56' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98000' id='55' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
+            <zone h='100000' id='58' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98000' id='57' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
                 <zone fixed-size='55' h='6875' id='27' is-fixed='true' is-scaled='1' param='Image/jhudsl_logo.png' type-v2='bitmap' w='5700' x='92000' y='1750'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -5000,8 +5010,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='800' minheight='800' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='48' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98000' id='47' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
+            <zone h='100000' id='50' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98000' id='49' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
                 <zone fixed-size='55' h='6875' id='27' is-fixed='true' is-scaled='1' param='Image/jhudsl_logo.png' type-v2='bitmap' w='5700' x='92000' y='1750'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -5130,8 +5140,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='8' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98000' id='7' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000' />
+            <zone h='100000' id='10' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98000' id='9' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000' />
               <zone-style>
                 <format attr='border-color' value='#000000' />
                 <format attr='border-style' value='none' />
@@ -5155,8 +5165,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='9' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98000' id='8' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
+            <zone h='100000' id='11' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98000' id='10' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
                 <zone fixed-size='280' h='65750' id='4' is-fixed='true' name='Leg Districts' w='80200' x='11500' y='15625'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -5470,7 +5480,7 @@
       </cards>
       <simple-id uuid='{B49DF6BF-FCEC-4917-9EC2-9097005E05EC}' />
     </window>
-    <window class='worksheet' name='Council Districts'>
+    <window class='worksheet' maximized='true' name='Council Districts'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -6394,13 +6404,13 @@
       </cards>
       <simple-id uuid='{C836D761-1F8C-4402-9DF9-77DF3FB518BB}' />
     </window>
-    <window class='dashboard' maximized='true' name='2020 LD'>
+    <window class='dashboard' name='2020 LD'>
       <viewpoints>
         <viewpoint name='Leg Districts'>
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='29' />
+      <active id='33' />
       <simple-id uuid='{F4511066-2D02-476C-BAB4-5F89CB48CCC8}' />
     </window>
     <window class='dashboard' name='2020 CD'>
