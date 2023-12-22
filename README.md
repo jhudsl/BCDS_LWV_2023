@@ -18,27 +18,29 @@ While compiling the data needed for our project, we came across a variety of dat
 
 ## Description of Files
 
-- `code/` (When running our code, we advise that the user follow the order below)
-  
-    1. `download_public_data.R`: Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
-    
-    The only private dataset we used was the 2022 voter data, which one can request by submitting the form on [this website](https://elections.maryland.gov/voter_registration/data.html) and paying a fee to the Maryland Board of Elections. When requesting voter registration files, date of birth (DOB) needs to be specifically requested, as these do not come with the data by default. We used the DOB variable to calculate voters' age on the election date before aggregating the counts of voters in each precinct (which we make publicly available in our `data/public/` folder).
+`code/`
 
+When running the code, we advise that the user follow the order below.
+  
+1. `download_public_data.R`: Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
+
+    The only private dataset we used was the 2022 voter data, which one can request by submitting the form on [this website](https://elections.maryland.gov/voter_registration/data.html) and paying a fee to the Maryland Board of Elections. When requesting voter registration files, date of birth (DOB) needs to be specifically requested, as these do not come with the data by default. We used the DOB variable to calculate voters' age on the election date before aggregating the counts of voters in each precinct (which we make publicly available in our `data/public/` folder).
+    
     Note about the shapefile being precincts, and redistricting.
 
-    3. `read_2020_primary_city_council_election_results.R`
-    4. `read_2020_MD_adjusted_census_adult_pop.R`: Table 3 is adult population, Table 2 is total population
-    5. `read_registered_voter_data.R`
-    6. `read_voting_history_data.R`
-    7. `merge_2020_primary_intermediate_datasets.R`
-    8. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
-    9. `make_precinct_councilmanic_legislative_district_keys.R`
-    10. `append_precinct_to_2020_primary_aggregated_merged_data.R`
-    11. `Merge Files for Tableau.R` (to do: move this from `data/final/` to `code` and update the filepaths in the script
+3. `read_2020_primary_city_council_election_results.R`
+4. `read_2020_MD_adjusted_census_adult_pop.R`: Table 3 is adult population, Table 2 is total population
+5. `read_registered_voter_data.R`
+6. `read_voting_history_data.R`
+7. `merge_2020_primary_intermediate_datasets.R`
+8. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
+9. `make_precinct_councilmanic_legislative_district_keys.R`
+10. `append_precinct_to_2020_primary_aggregated_merged_data.R`
+11. `Merge Files for Tableau.R` (to do: move this from `data/final/` to `code` and update the filepaths in the script
     
-Ignore the below for now:
+The organization below is not updated yet.
 
-- `data/`
+`data/`
   - `input/`
     - `public/`
       - `Baltimore_City/general_election_2022/`
