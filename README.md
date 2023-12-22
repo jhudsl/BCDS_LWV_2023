@@ -11,7 +11,7 @@
 **Overview**: 
 In this GitHub repository, we share code and files related to our project visualizing recent voter turnout in the June 2, 2020 primary election in Baltimore City. Our final product is an interactive dashboard hosted by Tableau Desktop [here]().
 
-Our project was inspired by [this dashboard](https://public.tableau.com/app/profile/michael.dunphy8764/viz/BaltimoreVotesCoalitionDemo/Dashboard) created by Michael Dunphy, Dr. Carrie Wright, and collaborators at the Baltimore Votes Coalition in the 2022 Democracy Data Science Hackathon. The GitHub repository for their dashboard is [here](https://github.com/carriewright11/Party_at_the_polls/tree/main).
+Our project was inspired by [this dashboard](https://public.tableau.com/app/profile/michael.dunphy8764/viz/BaltimoreVotesCoalitionDemo/Dashboard) created by Michael Dunphy, Dr. Carrie Wright, Wenhui Yang, Eliane Mitchell, and collaborators at the Baltimore Votes Coalition in the 2022 Democracy Data Science Hackathon. The GitHub repository for their dashboard is [here](https://github.com/carriewright11/Party_at_the_polls/tree/main).
 
 While compiling the data needed for our project, we came across a variety of data sources and resources for voting and elections in Baltimore City. This repository is meant to facilitate the ability of others, both within Baltimore and beyond, to obtain, process, and visualize similar data related to voter demographics, registration, and turnout at the election precinct (also known as "census voting district" or VTD), city council district, legislative district (i.e., districts used by the Maryland House of Representatives and Maryland Senate), or congressional district (used by the U.S. House of Representatives) level. 
 
