@@ -4,7 +4,7 @@
 
 **Contributors**: League of Women Voters of Baltimore City, especially Nancy Lawler, Dr. Billie Roberts Spann, and Flo Valentine; Michael Dunphy; Sam Novey
 
-**Acknowledgements**: We created this Tableau dashboard and GitHub repository as a part of our project for the fall 2023 course Baltimore Community Data Science at the Johns Hopkins Bloomberg School of Public Health. We would like to thank our instructors Dr. Carrie Wright, Dr. Ava Hoffman, and Dr. Michael Rosenblum as well as [SOURCE]() for their guidance on this project, lessons on critical service learning, and for introducing us to the League of Women Voters of Baltimore City.
+**Acknowledgements**: We created this Tableau dashboard and GitHub repository as a part of our project for the fall 2023 course Baltimore Community Data Science at the Johns Hopkins Bloomberg School of Public Health. We would like to thank our instructors Dr. Carrie Wright, Dr. Ava Hoffman, and Dr. Michael Rosenblum as well as [SOURCE](https://source.jhu.edu) for their guidance on this project, lessons on critical service learning, and for introducing us to the League of Women Voters of Baltimore City.
 
 **Created**: December 22, 2023
 
@@ -20,7 +20,7 @@ While compiling the data needed for our project, we came across a variety of dat
 
 -'code/'
     1. `download_public_data.R`: Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
-    The only private dataset we used was the 2022 voter data, which any organization can request, with a fee, by submitting [this]() form to the Maryland Board of Elections. When requesting voter registration files, date of births needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset.
+    The only private dataset we used was the 2022 voter data, which one can request by submitting the form on [this website](https://elections.maryland.gov/voter_registration/data.html) and paying a fee to the Maryland Board of Elections. When requesting voter registration files, date of birth (DOB) needs to be specifically requested, as these do not come with the data by default. We used the DOB variable to calculate voters' age on the election date before aggregating the counts of voters in each precinct (which we make publicly available in our `data/public/` folder).
     Note about the shapefile being precincts, and redistricting.
     2. `read_2020_primary_city_council_election_results.R`
     3. 'read_2020_MD_adjusted_census_adult_pop.R': Table 3 is adult population, Table 2 is total population
@@ -67,13 +67,13 @@ While compiling the data needed for our project, we came across a variety of dat
 
 ## Contact Us
 
-Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot] edu), Michelle Qin (mqin8 [at] jh [dot] edu), Michael Rosenblum (mrosen@jhu.edu )
+Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot] edu), Michelle Qin (mqin8 [at] jh [dot] edu), Michael Rosenblum (mrosen [at] jhu [dot] edu)
 
 
 ## Miscellaneous Notes
 
 Limitations of our estimates: people who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland) but it's hard to estimate that at the precinct, ward, legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City.
 
-When requesting voter registration files, date of births needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
+When requesting voter registration files, date of birth (DOB) needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
 
 Voter ID duplicates exist in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absenteee more than once. A person's voter ID does not change across elections (i.e., across time).
