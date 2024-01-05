@@ -11,7 +11,7 @@
 
 ## Overview
 
-In this GitHub repository, we share code and files related to our project visualizing recent voter turnout in the June 2, 2020 primary election in Baltimore City. Our final product is an interactive dashboard hosted by Tableau Desktop at [this link]().
+In this GitHub repository, we share code and files related to our project visualizing recent voter turnout in the June 2, 2020 primary election in Baltimore City. Our final product is an interactive dashboard hosted by Tableau Desktop at [link TBD]().
 
 Our project was inspired by the [dashboard created by Michael Dunphy, Dr. Carrie Wright, Wenhui Yang, Eliane Mitchell, and collaborators at the Baltimore Votes Coalition as part of the 2022 Democracy Data Science Hackathon](https://public.tableau.com/app/profile/michael.dunphy8764/viz/BaltimoreVotesCoalitionDemo/Dashboard). The GitHub repository for their dashboard is at [this link](https://github.com/carriewright11/Party_at_the_polls/tree/main).
 
@@ -92,13 +92,19 @@ Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot]
 
 **Limitations of Our Estimates**
 
-- People who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland) but it's hard to estimate that at the precinct, ward, legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City.
+- Our estimates of the number of eligible voters in a given location are approximate. People who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland) but it's hard to estimate those numbers at the precinct, city council district, or legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City.
+- We don't know the margin of error of the estimates given by our data sources.
+- The voter registration file lists voters' sex as M, F, or U, which we interpret as voters' sex being classified as male, female, or unknown.
 
 **Data Tips**
 
-- When requesting voter registration files, date of birth (DOB) needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
+Voter registration files:
 
-- Voter ID duplicates exist in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absenteee more than once. A person's voter ID does not change across elections (i.e., across time).
+- When [requesting voter registration files](https://elections.maryland.gov/voter_registration/data.html), the date of birth (DOB) variable needs to be specifically requested, as it does not come with the data by default. We used this variable to create the age variable in the dataset.
+- A person's voter ID does not change across years or elections.
+- A voter may be listed as having voted more than once in a single election in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absentee more than once or in more than one way.
+- A voter's listed precinct, legislative, councilmanic, and congressional district are for the year in which you requested the data. Therefore, due to possible redistricting across years, if you are analyzing voter turnout from a previous year, we recommend that you use a different data source to map from precinct to the various districts you want to aggregate to.
+- Note about under-18 voters: According to https://www.elections.maryland.gov/voter_registration/17_year_olds.html, “A registered 17 year old may vote in the Primary Election, provided the individual will be 18 years old on or before General Election. These 17 year olds are entitled to vote for all partisan contests and for school board contests but not in a special election (Washington County's ballot question) or municipal election (City of Cumberland in Allegany County). This information reflects the [Court of Appeals' order issued on Friday, February 8, 2008](http://mdcourts.gov/opinions/coa/2008/122a07pc.pdf).”
 
 **Disclaimer**
 
