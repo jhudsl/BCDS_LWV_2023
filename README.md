@@ -99,3 +99,7 @@ Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot]
 - When requesting voter registration files, date of birth (DOB) needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
 
 - Voter ID duplicates exist in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absenteee more than once. A person's voter ID does not change across elections (i.e., across time).
+
+**Disclaimer**
+
+The contents of this website are solely the opinions of the authors and not of any organization including Johns Hopkins University nor the League of Women Voters. 
