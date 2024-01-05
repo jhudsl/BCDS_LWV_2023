@@ -8,7 +8,6 @@
 
 **Acknowledgements**: We created this Tableau dashboard and GitHub repository for the fall 2023 [Baltimore Community Data Science](https://jhudatascience.org/Baltimore_Community_Course/) course at the Johns Hopkins Bloomberg School of Public Health. We would like to thank our instructors Dr. Carrie Wright, Dr. Ava Hoffman, and Dr. Michael Rosenblum as well as [SOURCE](https://source.jhu.edu) for their guidance on this project, lessons on critical service learning, and introduction to the League of Women Voters of Baltimore City.
 
-
 ## Overview
 
 In this GitHub repository, we share code and files related to our project visualizing recent voter turnout in the June 2, 2020 primary election in Baltimore City. Our final product is an interactive dashboard hosted by Tableau Desktop at [this link]().
@@ -99,3 +98,5 @@ Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot]
 - When requesting voter registration files, date of birth (DOB) needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
 
 - Voter ID duplicates exist in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absenteee more than once. A person's voter ID does not change across elections (i.e., across time).
+
+**Disclaimer**: The contents of this website are solely the opinions of the authors and not of any organization including Johns Hopkins University nor the League of Women Voters.
