@@ -1,76 +1,34 @@
-library(tabulizer) # for extract_text() function, for PDFs
+library(readxl)
 library(tidyverse) # for piping (%>%) and various functions
 
 # location of this repository on user's computer
 dir <- "../"
 
 # location of raw data
-raw_data_path <- paste0(dir, "data/input/public/Maryland/adjusted_population_data_2020.pdf")
+raw_data_dir <- paste0(dir, "data/input/public/Maryland/")
+raw_data_path <- paste0(raw_data_dir, "Table3_Adj.xlsx")
 
-##### Download 2020 precinct population counts corrected for prison gerrymandering (a PDF)
-
-## Uncomment this line if data isn't downloaded yet
-
-# download.file(url = "https://planning.maryland.gov/Redistricting/Documents/2020data/GreenReport.pdf",
-#               destfile = paste0(dir, "data/input/public/Maryland/adjusted_population_data_2020.pdf"))
-
-
-##### Read population data, as a table from a PDF
-
-## Select Table 3 (adjusted adult population, a.k.a. adjusted voting-age population)
-
-# to help parsing, get dimensions of Table 3 (pages 88-92)
-# page_dims_table3 <- get_page_dims(file = paste0(dir, "data/input/public/Maryland/adjusted_population_data_2020.pdf"),
-#                                   pages = 88:92)
-# page_dims_table3
-# [[1]]
-# [1] 1466.67 1133.33
-# 
-# [[2]]
-# [1] 1466.67 1133.33
-# 
-# [[3]]
-# [1] 1466.67 1133.33
-# 
-# [[4]]
-# [1] 1466.67 1133.33
-# 
-# [[5]]
-# [1] 1466.67 1133.33
-
-# parse Table 3
-# eyeball "area" from PDF and page dimensions; 188 is approximately 1133.33/6, 430 is approx 1133.33*2/5
-# need to do better than eyeball though (or check the eyeball), or else will miss rows in the table
-table3 <- extract_tables(file = raw_data_path,
-                         pages = 88:93,
-                         area = list(c(188, 1, 1050, 1466),
-                                     c(188, 1, 1050, 1466),
-                                     c(188, 1, 1050, 1466),
-                                     c(188, 1, 1050, 1466),
-                                     c(188, 1, 1050, 1466),
-                                     c(188, 1, 430, 1466)), # c(top, left, bottom, right)
-                         guess = F)
-
-# clean the parsed data
-table3 <- table3 %>%
-  lapply(as_tibble, .name_repair = "minimal") %>% # set .name_repair = "minimal" because there are no column names; the output of extract_tables() is a matrix
-  bind_rows() %>%
-  filter(grepl(pattern = "Baltimore City Precinct", x = `...3`)) %>%
-  select(-c(`...1`, `...3`)) # remove `...1` (Congressional District is not of interest for now), and `...3` is unnecessary now that we've filtered to Baltimore City
-
-colnames(table3) <- c("Legislative", "Precinct", "Adjusted_or_Unadjusted", "Census_Total_Pop", "Adjusted_Total_Pop",
+# read in data
+col_names_table3 <- c("Congressional", "Legislative", "County_Precinct", "Precinct", "Adjusted_or_Unadjusted", "Census_Total_Pop", "Adjusted_Total_Pop",
                       "Census_Total_Adult_Pop", "Adjusted_Total_Adult_Pop",
                       "Adjusted_One_Race_Adult_Pop", "Adjusted_White_Alone_Adult_Pop", "Adjusted_Black_Alone_Adult_Pop",
                       "Adjusted_American_Indian_Alaskan_Native_Alone_Adult_Pop", "Adjusted_Asian_Alone_Adult_Pop",
                       "Adjusted_Native_Hawaiian_Pacific_Islander_Alone_Adult_Pop", "Adjusted_Other_Race_Alone_Adult_Pop",
                       "Adjusted_Multiracial_Adult_Pop", "Adjusted_Hispanic_Latino_Adult_Pop")
+table3 <- read_xlsx(raw_data_path, range = "A17:R2096", col_names = col_names_table3)
 
+# filter to Baltimore City precincts
+table3 <- table3 %>%
+  filter(grepl(pattern = "Baltimore City Precinct", x = County_Precinct)) %>%
+  select(-c(Congressional, County_Precinct))
+
+# reformat certain columns (district names)
 table3 <- table3 %>%
   mutate(Legislative = str_remove(string = Legislative, pattern = "240"), # 24 is the Maryland state FIPS code, 0 is padding, so just get the last two digits for [state] legislative district
          Precinct = paste0("0", Precinct)) # zero-pad the precinct name to match the {3 digits}-{3 digits} format in election results data files
 
 
-##### Save the resulting data tables
+##### Save the resulting data table(s)
 
 write_csv(table3, file = paste0(dir, "data/intermediate/public/Baltimore_City/adjusted_adult_population_2020.csv"))
 
