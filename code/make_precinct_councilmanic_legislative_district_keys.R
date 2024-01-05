@@ -26,7 +26,22 @@ precinct_to_2020_councilmanic_district <- registered_voters_2022 %>%
   mutate(Precinct = paste0(substr(Precinct, 1, 3), "-", substr(Precinct, 4, 6))) %>% # use {3 digit ward}-{3 digit precinct within ward} naming convention for precinct
   select(Precinct, Councilmanic) %>%
   unique()
+precinct_to_2020_legislative_and_councilmanic_districts <- precinct_to_2020_legislative_district %>%
+  full_join(precinct_to_2020_councilmanic_district)
+
+# fill in NA's (i.e., councilmanic districts not in voter file, precincts in voter file that didn't exist in 2020)
+# reference: https://boe.baltimorecity.gov/sites/default/files/WardPrecinctCityCouncilDistrict10-2013.pdf
+precinct_to_2020_legislative_and_councilmanic_districts <- precinct_to_2020_legislative_and_councilmanic_districts %>%
+  mutate(Councilmanic = case_when(Precinct == "012-013" ~ "14",
+                                  Precinct == "013-013" ~ "14",
+                                  Precinct == "020-012" ~ "10",
+                                  Precinct == "021-005" ~ "11",
+                                  Precinct == "025-018" ~ "10",
+                                  .default = Councilmanic)) %>%
+  mutate(Legislative = case_when(Precinct == "027-069" ~ 41, # a guess, from https://boe.baltimorecity.gov/sites/default/files/wardsprecinctsCW_0.pdf
+                                 .default = Legislative))
 
 # save resulting table(s)
 write_csv(precinct_to_2020_legislative_district, file = paste0(dir, "data/intermediate/public/Baltimore_City/precinct_to_2020_legislative_district_key.csv"))
 write_csv(precinct_to_2020_councilmanic_district, file = paste0(dir, "data/intermediate/public/Baltimore_City/precinct_to_2020_councilmanic_district_key.csv"))
+write_csv(precinct_to_2020_legislative_and_councilmanic_districts, file = paste0(dir, "data/intermediate/public/Baltimore_City/precinct_to_2020_legislative_and_councilmanic_districts.csv"))
