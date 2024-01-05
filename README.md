@@ -92,7 +92,7 @@ Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot]
 
 **Limitations of Our Estimates**
 
-- Our estimates of the number of eligible voters in a given location are approximate. People who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland) but it's hard to estimate those numbers at the precinct, city council district, or legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City.
+- Our estimates of the number of eligible voters in a given location are approximate. People who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland). However, it is hard to estimate those numbers at the precinct, city council district, or legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City, so we approximate the voting-eligible population as the 18+ population adjusted for prison gerrymandering, which the Maryland state government releases at the election precinct level every 10 years.
 - We don't know the margin of error of the estimates given by our data sources.
 - The voter registration file lists voters' sex as M, F, or U, which we interpret as voters' sex being classified as male, female, or unknown.
 
