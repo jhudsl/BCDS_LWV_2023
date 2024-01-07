@@ -30,29 +30,37 @@ We hope that our documentation will facilitate the ability of others, both withi
 
 `code/`
 
-When running the code, we advise that the user follow the order below.
+When running the code, we recommend that the user follow the order below.
   
 1. `download_public_data.R`: Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
 
    The only private dataset we used was the 2022 voter data, which one can request by submitting the form on [this website](https://elections.maryland.gov/voter_registration/data.html) and paying a fee to the Maryland Board of Elections. When requesting voter registration files, date of birth (DOB) needs to be specifically requested, as these do not come with the data by default. We used the DOB variable to calculate voters' age on the election date before aggregating the counts of voters in each precinct (which we make publicly available in our `data/public/` folder).
    
-   Due to us analyzing a past election, shapefiles are precincts... but more recently election could use other shapefiles.
-    
-   See [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for more information on alternative data sources, the impact of redistricting on time-varying data, etc. Also see **Miscellaneous Notes** below for more tips on data processing.
+   See [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for more information on alternative data sources, the impact of redistricting on time-varying data, and more. Also, see **Miscellaneous Notes** below for more tips on data processing.
 
+2. `make_precinct_councilmanic_legislative_district_keys.R`
 3. `read_2020_primary_city_council_election_results.R`
 4. `read_2020_MD_adjusted_census_adult_pop.R`: Table 3 is adult population, Table 2 is total population
 5. `read_registered_voter_data.R`
 6. `read_voting_history_data.R`
 7. `merge_2020_primary_intermediate_datasets.R`
 8. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
-9. `make_precinct_councilmanic_legislative_district_keys.R`
-10. `append_precinct_to_2020_primary_aggregated_merged_data.R`
-11. `Merge Files for Tableau.R` (to do: move this from `data/final/` to `code` and update the filepaths in the script
+9. `append_precinct_to_2020_primary_aggregated_merged_data.R`
+10. `Merge Files for Tableau.R`
+11. `plot_district_summary_statistics.R`
     
 The organization below is not updated yet.
 
 `data/`
+
+   Since election precincts are nested within both councilmanic (i.e., city council) districts and state legislative districts, while councilmanic and legislative districts may not necessarily align, we calculated our statistics and used the shapefiles at the precinct level, before we aggregated to the councilmanic and legislative district level, which are likely of more interest to organizations working on voting.
+   
+   Maryland's legislative district boundaries (including some in Baltimore City) in 2020 were different from the current (i.e., 2023) boundaries. However, to the best of our knowledge, election precincts and city council districts (also known as councilmanic districts) have not changed from 2020 to 2023.
+
+   See [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for more information on alternative data sources, the impact of redistricting on time-varying data, and more.
+
+   Therefore, due to the availability of current precinct shapefiles on the [Census Bureau's website](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html)
+   Due to us analyzing a past election, shapefiles are precincts... but more recently election could use other shapefiles.
   - `input/`
     - `public/`
       - `Baltimore_City/general_election_2022/`
