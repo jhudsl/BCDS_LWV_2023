@@ -84,7 +84,6 @@ When running the code, **we strongly recommend that the user follow the order be
 
     Make bar charts
     
-The organization below is not updated yet.
 
 `data/`
 
@@ -102,7 +101,7 @@ The organization below is not updated yet.
         - `tl_2020_24_vtd20/` (folder containing shapefiles; the important one is `tl_2020_24_vtd20.shp`)
         - `md_vtd_2020_bound/` (not used, but the README may be helpful)
     - `private/`
-      - `Maryland/` (user may need to rename these files)
+      - `Maryland/` (user may need to rename these files after receiving them from the Maryland Board of Elections)
         - `Maryland_2022_Registered_Voter_List_readme.txt`
         - `Maryland_2022_Registered_Voter_List.txt`
         - `Maryland_2022_Voting_History_Part_1readme.txt`
@@ -160,15 +159,17 @@ Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot]
 - We don't know the margin of error of the estimates given by our data sources.
 - The voter registration file lists voters' sex as M, F, or U, which we interpret as voters' sex being classified as male, female, or unknown.
 
-**Data Processing Tips**
+**Tips for Processing Voter Registration Files**
 
-Voter registration files:
-
-- When [requesting voter registration files](https://elections.maryland.gov/voter_registration/data.html), the date of birth (DOB) variable needs to be specifically requested, as it does not come with the data by default. We used this variable to create the age variable in the dataset.
+- When [requesting Maryland voter registration files](https://elections.maryland.gov/voter_registration/data.html), the date of birth (DOB) variable needs to be specifically requested, as it does not come with the data by default. We used this variable to create the age variable in the dataset.
 - A person's voter ID does not change across years or elections.
 - A voter may be listed as having voted more than once in a single election in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absentee more than once or in more than one way.
 - A voter's listed precinct, legislative, councilmanic, and congressional district are for the year in which you requested the data. Therefore, due to possible redistricting across years, if you are analyzing voter turnout from a previous year, we recommend that you use a different data source to map from precinct to the various districts you want to aggregate to.
 - Note about under-18 voters: According to https://www.elections.maryland.gov/voter_registration/17_year_olds.html, “A registered 17 year old may vote in the Primary Election, provided the individual will be 18 years old on or before General Election. These 17 year olds are entitled to vote for all partisan contests and for school board contests but not in a special election (Washington County's ballot question) or municipal election (City of Cumberland in Allegany County). This information reflects the [Court of Appeals' order issued on Friday, February 8, 2008](http://mdcourts.gov/opinions/coa/2008/122a07pc.pdf).”
+
+**Organization of This Repository**
+
+- We initially planned to analyze the 2022 general election instead of the 2020 primary, so we wrote a bunch of code (in the `code/general_election_2022/` folder), processed a bunch of data (in the `data/input/public/Baltimore_City/general_election_2022/` and `data/intermediate/public/Baltimore_City/general_election_2022/` folders), and documented a bunch of data resources in [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for it.
 
 **Disclaimer**
 
