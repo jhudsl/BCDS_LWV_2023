@@ -90,32 +90,62 @@ The organization below is not updated yet.
 
   - `input/`
     - `public/`
-      - `Baltimore_City/general_election_2022/`
-        - `Precinct_results_including_ballot_type.csv`
-        - `precinct_results_including_turnout.pdf`
+      - `Baltimore_City/`
+        - `primary_election_2020/`
+          - `election_results.pdf`
+        - `general_election_2022/`
+          - `precinct_results_including_ballot_type.csv`
+          - `precinct_results_including_turnout.pdf`
       - `Maryland/`
+        - `Table3_Adj.xlsx`
         - `adjusted_population_data_2020.pdf`
+        - `tl_2020_24_vtd20/` (folder containing shapefiles; the important one is `tl_2020_24_vtd20.shp`)
+        - `md_vtd_2020_bound/` (not used, but the README may be helpful)
     - `private/`
-      - `Maryland/`
-        - `Maryland_2022_Registered_Voter List_readme.txt`
-        - `Maryland_2022_Registered_Voter_List _.txt`
-        - `Maryland_2022_Voting History_Part_1readme.txt`
-        - `Maryland_2022_Voting_History`
+      - `Maryland/` (user may need to rename these files)
+        - `Maryland_2022_Registered_Voter_List_readme.txt`
+        - `Maryland_2022_Registered_Voter_List.txt`
+        - `Maryland_2022_Voting_History_Part_1readme.txt`
+        - `Maryland_2022_Voting_History.tsv` (this file may appear as not having an extension, but it is a .tsv = tab-separated file)
   - `intermediate/`
     - `public/`
       - `Baltimore_City/`
+        - `adjusted_adult_population_2020.csv`
+        - `primary_election_2020/`
+          - `sex_and_age_counts_by_precinct_2020_primary.csv`
+          - `results_by_ballot_type_and_councilmanic_district.csv`
+          - `results_by_candidate_ballot_type_and_councilmanic_district.csv`
+          - `results_by_candidate_ballot_type_and_councilmanic_district_wide.csv`
+          - `merged_data_by_precinct.csv`
         - `general_election_2022/`
-        - `All_election_results_by_ballot_type.csv`
-        - `Gender_by_precinct.csv`
-        - `Governor_results.csv`
-        - `Turnout_results.csv`
-        - `us_senator_results.csv`
-        - `Adjusted_adult_population_2020.csv`
-        - `Adjusted_total_population_2020.csv`
-        - `Baltimore_city_2018_general_election_turnout_results.csv`
-        - `merged_data_2022GeneralElection_2020Population.csv`
-      - `private/`
+          - `turnout_by_ballot_type.csv`
+          - `turnout_by_office_and_ballot_type.csv`
+          - `turnout_results.csv`
+          - `candidate_results_by_ballot_type.csv`
+          - `sex_and_age_counts_by_precinct.csv`
+          - `merged_data_precincts.csv`
+        - `registered_voters_2020-06-02/`
+          - `registered_voters_age.csv`
+          - `registered_voters_gender.csv` (presumably sex of registered voters: male, female, and unknown)
+          - `registered_adults.csv`
+        - `registered_voters_2022-11-08/`
+          - `registered_voters_age.csv`
+          - `registered_voters_gender.csv` (presumably sex of registered voters: male, female, and unknown)
+          - `registered_adults.csv`
+        - `precinct_to_2020_councilmanic_district_key.csv`
+        - `precinct_to_2020_legislative_and_councilmanic_districts.csv`
+        - `precinct_to_2020_legislative_district_key.csv`
     - `final/`
+      - `public/`
+        - `Baltimore_City/`
+          - `primary_election_2020/`
+            - `LWV-BC Tableau.twbx` (this is the file of the dashboard)
+            - `Leg_and_Council_Data_by_Precinct.xlsx` (dataset that the .twbx file uses)
+            - `Leg_and_Council_Data_by_Precinct.csv` (used to create the .xlsx file)
+            - `merged_data_councilmanic_districts.csv` (used to create the above files)
+            - `merged_data_legislative_districts.csv` (used to create the above files)
+            - `merged_data_councilmanic_districts_with_precinct.csv` (used to create the above files)
+            - `merged_data_legislative_districts_with_precinct.csv` (used to create the above files)
 
 ## Contact Us
 
