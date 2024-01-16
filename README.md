@@ -60,27 +60,31 @@ When running the code, **we strongly recommend that the user follow the order be
    
 6. `read_voting_history_data.R`
 
-   From the voter file. Dataset of currently registered voters' voting history
+   This script reads in the .tsv voter history data file from the Maryland Board of Elections and merges each person's voting history with information from the voter registration records, also obtained from the Maryland Board of Elections, in order to get join voting history with demographic information.
+   The 'election' variable specifies the election for which to analyze data. The data is filtered to Baltimore City and, in this case, the 2020 Presidential Primary Election.
+   Within the filtered data, duplicate entries existed for the same individual/voter ID. Where this occurred, the voting method entry marked as "provisional" was removed if possible. Where two entries existed but neither was noted as "provisional," the second of the duplicates in the dataset was removed.
+   Sex and age group counts were aggregated at the precinct levels and exported to a .csv format for further analysis and visualization. 
 
-7. `merge_2020_primary_intermediate_datasets.R`
+8. `merge_2020_primary_intermediate_datasets.R`
 
    Merge by precinct
 
-8. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
+9. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
 
    Districts may be of more interest to CBOs
 
-9. `append_precinct_to_2020_primary_aggregated_merged_data.R`
+10. `append_precinct_to_2020_primary_aggregated_merged_data.R`
 
    Therefore, due to the availability of current precinct shapefiles on the [Census Bureau's website](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html)
    
    Due to us analyzing a past election, shapefiles are precincts... but more recently election could use other shapefiles.
 
-10. `Merge Files for Tableau.R`
+11. `Merge Files for Tableau.R`
 
-    Excel sheet
+    Creates a single .csv spreadsheet for upload into Tableau. Essentially, this merges all aggregated data available for each precinct at both legislative and city council district levels. In other word, all precincts within each council or legislative district will have the same values for all variables. Since the same variables were calculated at both legislative and council district levels, "Leg_Dist" and "Council_Dist" were appended to the front of column names in each dataset respectively in order to promote differentiation in Tableau upon upload.
+    Note: The .csv file must subsequently be saved as an Excel spreadsheet in order for successful upload to Tableau. 
     
-11. `plot_district_summary_statistics.R`
+13. `plot_district_summary_statistics.R`
 
     Make bar charts
     
@@ -111,7 +115,7 @@ When running the code, **we strongly recommend that the user follow the order be
       - `Baltimore_City/`
         - `adjusted_adult_population_2020.csv`
         - `primary_election_2020/`
-          - `sex_and_age_counts_by_precinct_2020_primary.csv`
+          - `sex_and_age_counts_by_precinct_2020_primary.csv` (sex and age counts aggregated to the precinct level for the 2020 primary election)
           - `results_by_ballot_type_and_councilmanic_district.csv`
           - `results_by_candidate_ballot_type_and_councilmanic_district.csv`
           - `results_by_candidate_ballot_type_and_councilmanic_district_wide.csv`
@@ -121,7 +125,7 @@ When running the code, **we strongly recommend that the user follow the order be
           - `turnout_by_office_and_ballot_type.csv`
           - `turnout_results.csv`
           - `candidate_results_by_ballot_type.csv`
-          - `sex_and_age_counts_by_precinct.csv`
+          - `sex_and_age_counts_by_precinct.csv` (sex and age counts aggregated to the precinct level for the 2022 general election)
           - `merged_data_precincts.csv`
         - `registered_voters_2020-06-02/`
           - `registered_voters_age.csv`
@@ -139,7 +143,7 @@ When running the code, **we strongly recommend that the user follow the order be
         - `Baltimore_City/`
           - `primary_election_2020/`
             - `LWV-BC Tableau.twbx` (this is the file of the dashboard)
-            - `Leg_and_Council_Data_by_Precinct.xlsx` (dataset that the .twbx file uses)
+            - `Leg_and_Council_Data_by_Precinct.xlsx` (Excel dataset that the .twbx file uses)
             - `Leg_and_Council_Data_by_Precinct.csv` (used to create the .xlsx file)
             - `merged_data_councilmanic_districts.csv` (used to create the above files)
             - `merged_data_legislative_districts.csv` (used to create the above files)
