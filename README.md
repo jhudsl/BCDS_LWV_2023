@@ -32,7 +32,9 @@ We hope that our documentation will facilitate the ability of others, both withi
 
 When running the code, **we strongly recommend that the user follow the order below.**
   
-1. `download_public_data.R`: Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
+1. `download_public_data.R`
+
+   Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
 
    The only private dataset we used was the 2022 voter data, which one can request by submitting the form on [this website](https://elections.maryland.gov/voter_registration/data.html) and paying a fee to the Maryland Board of Elections. When requesting voter registration files, date of birth (DOB) needs to be specifically requested, as these do not come with the data by default. We used the DOB variable to calculate voters' age on the election date before aggregating the counts of voters in each precinct (which we make publicly available in our `data/public/` folder).
    
@@ -48,15 +50,17 @@ When running the code, **we strongly recommend that the user follow the order be
    
 3. `read_2020_primary_city_council_election_results.R`
 
-   From Baltimore City BOE or Maryland state BOE
+   Election data is generally available on the public website of Baltimore City Board of Elections or Maryland Board of Elections. May be a PDF or CSV, depending on the election.
    
-4. `read_2020_MD_adjusted_census_adult_pop.R`: Table 3 is adult population, Table 2 is total population
+4. `read_2020_MD_adjusted_census_adult_pop.R`
 
-   See Project Resources for more info on adjusting. Use excel sheets on website but there is a PDF for more info
+   Get the adjusted total population (Table 2) and adjusted total adult population (Table 3) data, released every 10 years and available at election precinct level.
+
+   See Maryland government's documentation in [this PDF](https://planning.maryland.gov/Redistricting/Documents/2020data/GreenReport.pdf), or see [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for more information on how and why Maryland adjusts the decennial census population data for prison gerrymandering.
    
 5. `read_registered_voter_data.R`
 
-   From the voter file. Dataset of currently registered voters
+   This script reads in the .txt file of currently registered voters from the Maryland Board of Elections and gets counts of age groups and sex by election precinct.
    
 6. `read_voting_history_data.R`
 
@@ -65,28 +69,26 @@ When running the code, **we strongly recommend that the user follow the order be
    Within the filtered data, duplicate entries existed for the same individual/voter ID. Where this occurred, the voting method entry marked as "provisional" was removed if possible. Where two entries existed but neither was noted as "provisional," the second of the duplicates in the dataset was removed.
    Sex and age group counts were aggregated at the precinct levels and exported to a .csv format for further analysis and visualization. 
 
-8. `merge_2020_primary_intermediate_datasets.R`
+7. `merge_2020_primary_intermediate_datasets.R`
 
-   Merge by precinct
+   Merge election results, population data, and voter demographics data by election precinct.
 
-9. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
+8. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
 
-   Districts may be of more interest to CBOs
+   Aggregate from precincts to legislative and councilmanic districts, which may be more actionable for voting organizations.
 
-10. `append_precinct_to_2020_primary_aggregated_merged_data.R`
+9. `append_precinct_to_2020_primary_aggregated_merged_data.R`
 
-   Therefore, due to the availability of current precinct shapefiles on the [Census Bureau's website](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html)
-   
-   Due to us analyzing a past election, shapefiles are precincts... but more recently election could use other shapefiles.
+   We were not able to find the 2020 legislative district or 2020 councilmanic district shapefiles online. (We saw only the current district boundaries, which were redrawn after 2020. However, we were able to find the shapefiles for the 2020 election precincts. Therefore, our dashboard uses 2020 precinct boundaries, but we map legislative and councilmanic district-level variables onto them. This script performs the district-to-precinct mapping.
 
-11. `Merge Files for Tableau.R`
+10. `Merge Files for Tableau.R`
 
     Creates a single .csv spreadsheet for upload into Tableau. Essentially, this merges all aggregated data available for each precinct at both legislative and city council district levels. In other word, all precincts within each council or legislative district will have the same values for all variables. Since the same variables were calculated at both legislative and council district levels, "Leg_Dist" and "Council_Dist" were appended to the front of column names in each dataset respectively in order to promote differentiation in Tableau upon upload.
     Note: The .csv file must subsequently be saved as an Excel spreadsheet in order for successful upload to Tableau. 
     
-13. `plot_district_summary_statistics.R`
+11. `plot_district_summary_statistics.R`
 
-    Make bar charts
+    Makes bar charts, which are saved in `figures/` folder.
     
 
 `data/`
@@ -149,6 +151,11 @@ When running the code, **we strongly recommend that the user follow the order be
             - `merged_data_legislative_districts.csv` (used to create the above files)
             - `merged_data_councilmanic_districts_with_precinct.csv` (used to create the above files)
             - `merged_data_legislative_districts_with_precinct.csv` (used to create the above files)
+
+`figures/`
+
+  Static (i.e., non-interactive) graphs generated by `code/plot_district_summary_statistics.R`.
+
 
 ## Contact Us
 
