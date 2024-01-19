@@ -1,0 +1,168 @@
+library(tidyverse)
+
+# location of this repository on user's computer
+dir <- "../"
+
+# location to save the processed data (at the end of this script)
+legislative_district_data_dir <- paste0(dir, "data/final/public/Baltimore_City/primary_election_2020/")
+councilmanic_district_data_dir <- paste0(dir, "data/final/public/Baltimore_City/primary_election_2020/")
+
+legislative_district_data_path <- paste0(legislative_district_data_dir, "merged_data_legislative_districts.csv")
+councilmanic_district_data_path <- paste0(councilmanic_district_data_dir, "merged_data_councilmanic_districts.csv")
+
+# read in data
+precinct_data <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/merged_data_by_precinct.csv"))
+# city_council_election_results <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_candidate_ballot_type_and_councilmanic_district.csv"))
+city_council_election_results_aggregated <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_ballot_type_and_councilmanic_district.csv"))
+# city_council_election_results_wide <- read_csv(file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/results_by_candidate_ballot_type_and_councilmanic_district_wide.csv"))
+
+# aggregate from precinct to [state] legislative district
+legislative_district_data <- precinct_data %>%
+  summarize(Adjusted_Total_Pop = sum(Adjusted_Total_Pop, na.rm = T),
+            Adjusted_Total_Adult_Pop = sum(Adjusted_Total_Adult_Pop, na.rm = T),
+            Adjusted_Hispanic_Latino_Adult_Pop = sum(Adjusted_Hispanic_Latino_Adult_Pop, na.rm = T),
+            Voted_Total = sum(Voted_Total, na.rm = T),
+            Voted_Adults = sum(Voted_Adults, na.rm = T),
+            Voted_Female = sum(Voted_Female, na.rm = T),
+            Voted_Male = sum(Voted_Male, na.rm = T),
+            Voted_UnknownSex = sum(Voted_UnknownSex, na.rm = T),
+            Voted_16to17 = sum(Voted_16to17, na.rm = T),
+            Voted_18to29 = sum(Voted_18to29, na.rm = T),
+            Voted_30to49 = sum(Voted_30to49, na.rm = T),
+            Voted_50to64 = sum(Voted_50to64, na.rm = T),
+            Voted_65plus = sum(Voted_65plus, na.rm = T),
+            Voted_UnknownAge = sum(Voted_UnknownAge, na.rm = T),
+            Registered_Total = sum(Registered_Total, na.rm = T),
+            Registered_Adults = sum(Registered_Adults, na.rm = T),
+            Registered_Female = sum(Registered_Female, na.rm = T),
+            Registered_Male = sum(Registered_Male, na.rm = T),
+            Registered_UnknownSex = sum(Registered_UnknownSex, na.rm = T),
+            Registered_16to17 = sum(Registered_16to17, na.rm = T),
+            Registered_18to29 = sum(Registered_18to29, na.rm = T),
+            Registered_30to49 = sum(Registered_30to49, na.rm = T),
+            Registered_50to64 = sum(Registered_50to64, na.rm = T),
+            Registered_65plus = sum(Registered_65plus, na.rm = T),
+            Registered_UnknownAge = sum(Registered_UnknownAge, na.rm = T),
+            .by = Legislative) %>%
+  drop_na(Legislative) %>%
+  mutate(Legislative = Legislative,
+         Voted_of_Registered_Adults = round(Voted_Adults / Registered_Adults * 100, 2),
+         Voted_of_Adjusted_Total_Adults = round(Voted_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Registered_of_Adjusted_Total_Adults = round(Registered_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Hispanic_Latino_of_Total_Adjusted_Adults = round(Adjusted_Hispanic_Latino_Adult_Pop / Adjusted_Total_Adult_Pop * 100, 2),
+         Female_of_Voted = round(Voted_Female / Voted_Total * 100, 2),
+         Male_of_Voted = round(Voted_Male / Voted_Total * 100, 2),
+         UnknownSex_of_Voted = round(Voted_UnknownSex / Voted_Total * 100, 2),
+         Ages16to17_of_Voted = round(Voted_16to17 / Voted_Total * 100, 2),
+         Ages18to29_of_Voted = round(Voted_18to29 / Voted_Total * 100, 2),
+         Ages30to49_of_Voted = round(Voted_30to49 / Voted_Total * 100, 2),
+         Ages50to64_of_Voted = round(Voted_50to64 / Voted_Total * 100, 2),
+         Ages65plus_of_Voted = round(Voted_65plus / Voted_Total * 100, 2),
+         UnknownAge_of_Voted = round(Voted_UnknownAge / Voted_Total * 100, 2),
+         Female_of_Registered = round(Registered_Female / Registered_Total * 100, 2),
+         Male_of_Registered = round(Registered_Male / Registered_Total * 100, 2),
+         UnknownSex_of_Registered = round(Registered_UnknownSex / Registered_Total * 100, 2),
+         Ages16to17_of_Registered = round(Registered_16to17 / Registered_Total * 100, 2),
+         Ages18to29_of_Registered = round(Registered_18to29 / Registered_Total * 100, 2),
+         Ages30to49_of_Registered = round(Registered_30to49 / Registered_Total * 100, 2),
+         Ages50to64_of_Registered = round(Registered_50to64 / Registered_Total * 100, 2),
+         Ages65plus_of_Registered = round(Registered_65plus / Registered_Total * 100, 2),
+         UnknownAge_of_Registered = round(Registered_UnknownAge / Registered_Total * 100, 2),
+         .keep = "none") # delete all other columns
+
+# aggregate from precinct to city council = councilmanic district
+councilmanic_district_data <- precinct_data %>%
+  summarize(Adjusted_Total_Pop = sum(Adjusted_Total_Pop, na.rm = T),
+            Adjusted_Total_Adult_Pop = sum(Adjusted_Total_Adult_Pop, na.rm = T),
+            Adjusted_Hispanic_Latino_Adult_Pop = sum(Adjusted_Hispanic_Latino_Adult_Pop, na.rm = T),
+            Voted_Total = sum(Voted_Total, na.rm = T),
+            Voted_Adults = sum(Voted_Adults, na.rm = T),
+            Voted_Female = sum(Voted_Female, na.rm = T),
+            Voted_Male = sum(Voted_Male, na.rm = T),
+            Voted_UnknownSex = sum(Voted_UnknownSex, na.rm = T),
+            Voted_16to17 = sum(Voted_16to17, na.rm = T),
+            Voted_18to29 = sum(Voted_18to29, na.rm = T),
+            Voted_30to49 = sum(Voted_30to49, na.rm = T),
+            Voted_50to64 = sum(Voted_50to64, na.rm = T),
+            Voted_65plus = sum(Voted_65plus, na.rm = T),
+            Voted_UnknownAge = sum(Voted_UnknownAge, na.rm = T),
+            Registered_Total = sum(Registered_Total, na.rm = T),
+            Registered_Adults = sum(Registered_Adults, na.rm = T),
+            Registered_Female = sum(Registered_Female, na.rm = T),
+            Registered_Male = sum(Registered_Male, na.rm = T),
+            Registered_UnknownSex = sum(Registered_UnknownSex, na.rm = T),
+            Registered_16to17 = sum(Registered_16to17, na.rm = T),
+            Registered_18to29 = sum(Registered_18to29, na.rm = T),
+            Registered_30to49 = sum(Registered_30to49, na.rm = T),
+            Registered_50to64 = sum(Registered_50to64, na.rm = T),
+            Registered_65plus = sum(Registered_65plus, na.rm = T),
+            Registered_UnknownAge = sum(Registered_UnknownAge, na.rm = T),
+            .by = Councilmanic) %>%
+  drop_na(Councilmanic) %>%
+  filter(Councilmanic != "000") %>%
+  mutate(Councilmanic = Councilmanic,
+         Voted_of_Registered_Adults = round(Voted_Adults / Registered_Adults * 100, 2),
+         Voted_of_Adjusted_Total_Adults = round(Voted_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Registered_of_Adjusted_Total_Adults = round(Registered_Adults / Adjusted_Total_Adult_Pop * 100, 2),
+         Hispanic_Latino_of_Total_Adjusted_Adults = round(Adjusted_Hispanic_Latino_Adult_Pop / Adjusted_Total_Adult_Pop * 100, 2),
+         Female_of_Voted = round(Voted_Female / Voted_Total * 100, 2),
+         Male_of_Voted = round(Voted_Male / Voted_Total * 100, 2),
+         UnknownSex_of_Voted = round(Voted_UnknownSex / Voted_Total * 100, 2),
+         Ages16to17_of_Voted = round(Voted_16to17 / Voted_Total * 100, 2),
+         Ages18to29_of_Voted = round(Voted_18to29 / Voted_Total * 100, 2),
+         Ages30to49_of_Voted = round(Voted_30to49 / Voted_Total * 100, 2),
+         Ages50to64_of_Voted = round(Voted_50to64 / Voted_Total * 100, 2),
+         Ages65plus_of_Voted = round(Voted_65plus / Voted_Total * 100, 2),
+         UnknownAge_of_Voted = round(Voted_UnknownAge / Voted_Total * 100, 2),
+         Female_of_Registered = round(Registered_Female / Registered_Total * 100, 2),
+         Male_of_Registered = round(Registered_Male / Registered_Total * 100, 2),
+         UnknownSex_of_Registered = round(Registered_UnknownSex / Registered_Total * 100, 2),
+         Ages16to17_of_Registered = round(Registered_16to17 / Registered_Total * 100, 2),
+         Ages18to29_of_Registered = round(Registered_18to29 / Registered_Total * 100, 2),
+         Ages30to49_of_Registered = round(Registered_30to49 / Registered_Total * 100, 2),
+         Ages50to64_of_Registered = round(Registered_50to64 / Registered_Total * 100, 2),
+         Ages65plus_of_Registered = round(Registered_65plus / Registered_Total * 100, 2),
+         UnknownAge_of_Registered = round(Registered_UnknownAge / Registered_Total * 100, 2),
+         .keep = "none") # delete all other columns
+
+# clean city council election results, then merge
+city_council_results_combined_parties <- city_council_election_results_aggregated %>%
+  group_by(Councilmanic) %>%
+  summarize(Total_Votes = sum(Total_Votes),
+            Total_Votes_by_Mail = sum(Total_Votes_by_Mail),
+            Total_In_Person_Votes = sum(Total_In_Person_Votes),
+            Total_Provisional_Votes = sum(Total_Provisional_Votes)) %>%
+  mutate(Votes_by_Mail_Percent = round(Total_Votes_by_Mail / Total_Votes * 100, 2),
+         In_Person_Votes_Percent = round(Total_In_Person_Votes / Total_Votes * 100, 2),
+         Provisional_Votes_Percent = round(Total_Provisional_Votes / Total_Votes * 100, 2)) %>%
+  select(Councilmanic, Votes_by_Mail_Percent, In_Person_Votes_Percent, Provisional_Votes_Percent)
+
+city_council_number_of_candidates <- city_council_election_results_aggregated %>%
+  select(Councilmanic, Office, Number_of_Candidates) %>%
+  pivot_wider(names_from = Office,
+              values_from = Number_of_Candidates) %>%
+  rename(Number_of_Democrat_Candidates = `DEM Member City Council`,
+         Number_of_Republican_Candidates = `REP Member City Council`) %>%
+  mutate(Number_of_Republican_Candidates = ifelse(is.na(Number_of_Republican_Candidates), 0, Number_of_Republican_Candidates))
+
+city_council_results <- full_join(city_council_results_combined_parties,
+                                  city_council_number_of_candidates,
+                                  by = "Councilmanic") %>%
+  mutate(Councilmanic = as.character(Councilmanic)) %>%
+  mutate(Councilmanic = case_when(nchar(Councilmanic) == 1 ~ paste0("00", Councilmanic),
+                                  nchar(Councilmanic) == 2 ~ paste0("0", Councilmanic),
+                                  .default = Councilmanic))
+
+councilmanic_district_data <- councilmanic_district_data %>%
+  full_join(city_council_results, by = "Councilmanic")
+
+# save aggregated dataset(s)
+if (!dir.exists(legislative_district_data_dir)){
+  dir.create(legislative_district_data_dir)
+}
+if (!dir.exists(councilmanic_district_data_dir)){
+  dir.create(councilmanic_district_data_dir)
+}
+
+write_csv(legislative_district_data, file = legislative_district_data_path)
+write_csv(councilmanic_district_data, file = councilmanic_district_data_path)
