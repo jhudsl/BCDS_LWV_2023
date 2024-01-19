@@ -11,12 +11,9 @@
 
 ## Overview
 
-In this GitHub repository, we share code and files related to our project visualizing recent voter turnout in the June 2, 2020 primary election in Baltimore City. Our final product is an interactive dashboard hosted by Tableau Desktop at [link TBD]().
+In this GitHub repository, we share code and files related to our project visualizing recent voter turnout in the June 2, 2020 primary election in Baltimore City. Our final product is an interactive dashboard hosted by Tableau Desktop at [link TBD](). We hope that our code and compilation of data sources will be helpful for projects analyzing other elections as well.
 
 Our project was inspired by the [dashboard created by Michael Dunphy, Dr. Carrie Wright, Wenhui Yang, Eliane Mitchell, and collaborators at the Baltimore Votes Coalition as part of the 2022 Democracy Data Science Hackathon](https://public.tableau.com/app/profile/michael.dunphy8764/viz/BaltimoreVotesCoalitionDemo/Dashboard). The GitHub repository for their dashboard is at [this link](https://github.com/carriewright11/Party_at_the_polls/tree/main).
-
-<!-- Throughout our project, we came across a variety of data sources and information about election results and eligibility in Baltimore City. -->
-<!-- We documented our data sources, code, and contributions of our project. -->
 
 Over the course of this project, we learned a lot about:
 
@@ -33,55 +30,132 @@ We hope that our documentation will facilitate the ability of others, both withi
 
 `code/`
 
-When running the code, we advise that the user follow the order below.
+When running the code, **we strongly recommend that the user follow the order below.**
   
-1. `download_public_data.R`: Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
+1. `download_public_data.R`
 
-    The only private dataset we used was the 2022 voter data, which one can request by submitting the form on [this website](https://elections.maryland.gov/voter_registration/data.html) and paying a fee to the Maryland Board of Elections. When requesting voter registration files, date of birth (DOB) needs to be specifically requested, as these do not come with the data by default. We used the DOB variable to calculate voters' age on the election date before aggregating the counts of voters in each precinct (which we make publicly available in our `data/public/` folder).
-    
-    To Do: Note about the shapefile being precincts, and redistricting.
+   Run this script to download publicly available data from online (we chose to use government sources because we believe they are released the quickest and most reliably after an election), which is most of the data needed for the dashboard.
 
+   The only private dataset we used was the 2022 voter data, which one can request by submitting the form on [this website](https://elections.maryland.gov/voter_registration/data.html) and paying a fee to the Maryland Board of Elections. When requesting voter registration files, date of birth (DOB) needs to be specifically requested, as these do not come with the data by default. We used the DOB variable to calculate voters' age on the election date before aggregating the counts of voters in each precinct (which we make publicly available in our `data/public/` folder).
+   
+   See [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for more information on alternative data sources, the impact of redistricting on time-varying data, and more. Also, see **Miscellaneous Notes** below for more tips on data processing.
+
+2. `make_precinct_councilmanic_legislative_district_keys.R`
+
+   Since election precincts are nested within both councilmanic (i.e., city council) districts and state legislative districts, while councilmanic and legislative districts may not necessarily align, we calculated our statistics and used the shapefiles at the precinct level, before we aggregated to the councilmanic and legislative district level, which are likely of more interest to organizations working on voting.
+   
+   Maryland's legislative district boundaries (including some in Baltimore City) in 2020 were different from the current (i.e., 2023) boundaries. However, to the best of our knowledge, election precincts and city council districts (also known as councilmanic districts) have not changed from 2020 to 2023.
+
+   See [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for more information on alternative data sources, the impact of redistricting on time-varying data, and more.
+   
 3. `read_2020_primary_city_council_election_results.R`
-4. `read_2020_MD_adjusted_census_adult_pop.R`: Table 3 is adult population, Table 2 is total population
+
+   Election data is generally available on the public website of Baltimore City Board of Elections or Maryland Board of Elections. May be a PDF or CSV, depending on the election.
+   
+4. `read_2020_MD_adjusted_census_adult_pop.R`
+
+   Get the adjusted total population (Table 2) and adjusted total adult population (Table 3) data, released every 10 years and available at election precinct level.
+
+   See Maryland government's documentation in [this PDF](https://planning.maryland.gov/Redistricting/Documents/2020data/GreenReport.pdf), or see [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for more information on how and why Maryland adjusts the decennial census population data for prison gerrymandering.
+   
 5. `read_registered_voter_data.R`
+
+   This script reads in the .txt file of currently registered voters from the Maryland Board of Elections and gets counts of age groups and sex by election precinct.
+   
 6. `read_voting_history_data.R`
+
+   This script reads in the .tsv voter history data file from the Maryland Board of Elections and merges each person's voting history with information from the voter registration records, also obtained from the Maryland Board of Elections, in order to get join voting history with demographic information.
+   The 'election' variable specifies the election for which to analyze data. The data is filtered to Baltimore City and, in this case, the 2020 Presidential Primary Election.
+   Within the filtered data, duplicate entries existed for the same individual/voter ID. Where this occurred, the voting method entry marked as "provisional" was removed if possible. Where two entries existed but neither was noted as "provisional," the second of the duplicates in the dataset was removed.
+   Sex and age group counts were aggregated at the precinct levels and exported to a .csv format for further analysis and visualization. 
+
 7. `merge_2020_primary_intermediate_datasets.R`
+
+   Merge election results, population data, and voter demographics data by election precinct.
+
 8. `aggregate_2020_primary_merged_data_from_precinct_to_districts.R`
-9. `make_precinct_councilmanic_legislative_district_keys.R`
-10. `append_precinct_to_2020_primary_aggregated_merged_data.R`
-11. `Merge Files for Tableau.R` (to do: move this from `data/final/` to `code` and update the filepaths in the script
+
+   Aggregate from precincts to legislative and councilmanic districts, which may be more actionable for voting organizations.
+
+9. `append_precinct_to_2020_primary_aggregated_merged_data.R`
+
+   We were not able to find the 2020 legislative district or 2020 councilmanic district shapefiles online. (We saw only the current district boundaries, which were redrawn after 2020. However, we were able to find the shapefiles for the 2020 election precincts. Therefore, our dashboard uses 2020 precinct boundaries, but we map legislative and councilmanic district-level variables onto them. This script performs the district-to-precinct mapping.
+
+10. `Merge Files for Tableau.R`
+
+    Creates a single .csv spreadsheet for upload into Tableau. Essentially, this merges all aggregated data available for each precinct at both legislative and city council district levels. In other word, all precincts within each council or legislative district will have the same values for all variables. Since the same variables were calculated at both legislative and council district levels, "Leg_Dist" and "Council_Dist" were appended to the front of column names in each dataset respectively in order to promote differentiation in Tableau upon upload.
+    Note: The .csv file must subsequently be saved as an Excel spreadsheet in order for successful upload to Tableau. 
     
-The organization below is not updated yet.
+11. `plot_district_summary_statistics.R`
+
+    Makes bar charts, which are saved in `figures/` folder.
+    
 
 `data/`
+
   - `input/`
     - `public/`
-      - `Baltimore_City/general_election_2022/`
-        - `Precinct_results_including_ballot_type.csv`
-        - `precinct_results_including_turnout.pdf`
+      - `Baltimore_City/`
+        - `primary_election_2020/`
+          - `election_results.pdf`
+        - `general_election_2022/`
+          - `precinct_results_including_ballot_type.csv`
+          - `precinct_results_including_turnout.pdf`
       - `Maryland/`
+        - `Table3_Adj.xlsx`
         - `adjusted_population_data_2020.pdf`
+        - `tl_2020_24_vtd20/` (folder containing shapefiles; the important one is `tl_2020_24_vtd20.shp`)
+        - `md_vtd_2020_bound/` (not used, but the README may be helpful)
     - `private/`
-      - `Maryland/`
-        - `Maryland_2022_Registered_Voter List_readme.txt`
-        - `Maryland_2022_Registered_Voter_List _.txt`
-        - `Maryland_2022_Voting History_Part_1readme.txt`
-        - `Maryland_2022_Voting_History`
+      - `Maryland/` (user may need to rename these files after receiving them from the Maryland Board of Elections)
+        - `Maryland_2022_Registered_Voter_List_readme.txt`
+        - `Maryland_2022_Registered_Voter_List.txt`
+        - `Maryland_2022_Voting_History_Part_1readme.txt`
+        - `Maryland_2022_Voting_History.tsv` (this file may appear as not having an extension, but it is a .tsv = tab-separated file)
   - `intermediate/`
     - `public/`
       - `Baltimore_City/`
+        - `adjusted_adult_population_2020.csv`
+        - `primary_election_2020/`
+          - `sex_and_age_counts_by_precinct_2020_primary.csv` (sex and age counts aggregated to the precinct level for the 2020 primary election)
+          - `results_by_ballot_type_and_councilmanic_district.csv`
+          - `results_by_candidate_ballot_type_and_councilmanic_district.csv`
+          - `results_by_candidate_ballot_type_and_councilmanic_district_wide.csv`
+          - `merged_data_by_precinct.csv`
         - `general_election_2022/`
-        - `All_election_results_by_ballot_type.csv`
-        - `Gender_by_precinct.csv`
-        - `Governor_results.csv`
-        - `Turnout_results.csv`
-        - `us_senator_results.csv`
-        - `Adjusted_adult_population_2020.csv`
-        - `Adjusted_total_population_2020.csv`
-        - `Baltimore_city_2018_general_election_turnout_results.csv`
-        - `merged_data_2022GeneralElection_2020Population.csv`
-      - `private/`
+          - `turnout_by_ballot_type.csv`
+          - `turnout_by_office_and_ballot_type.csv`
+          - `turnout_results.csv`
+          - `candidate_results_by_ballot_type.csv`
+          - `sex_and_age_counts_by_precinct.csv` (sex and age counts aggregated to the precinct level for the 2022 general election)
+          - `merged_data_precincts.csv`
+        - `registered_voters_2020-06-02/`
+          - `registered_voters_age.csv`
+          - `registered_voters_gender.csv` (presumably sex of registered voters: male, female, and unknown)
+          - `registered_adults.csv`
+        - `registered_voters_2022-11-08/`
+          - `registered_voters_age.csv`
+          - `registered_voters_gender.csv` (presumably sex of registered voters: male, female, and unknown)
+          - `registered_adults.csv`
+        - `precinct_to_2020_councilmanic_district_key.csv`
+        - `precinct_to_2020_legislative_and_councilmanic_districts.csv`
+        - `precinct_to_2020_legislative_district_key.csv`
     - `final/`
+      - `public/`
+        - `Baltimore_City/`
+          - `primary_election_2020/`
+            - `LWV-BC Tableau.twbx` (this is the file of the dashboard)
+            - `Leg_and_Council_Data_by_Precinct.xlsx` (Excel dataset that the .twbx file uses)
+            - `Leg_and_Council_Data_by_Precinct.csv` (used to create the .xlsx file)
+            - `merged_data_councilmanic_districts.csv` (used to create the above files)
+            - `merged_data_legislative_districts.csv` (used to create the above files)
+            - `merged_data_councilmanic_districts_with_precinct.csv` (used to create the above files)
+            - `merged_data_legislative_districts_with_precinct.csv` (used to create the above files)
+
+`figures/`
+
+  Static (i.e., non-interactive) graphs generated by `code/plot_district_summary_statistics.R`.
+
 
 ## Contact Us
 
@@ -92,10 +166,22 @@ Ugochi Ejiogu (uejiogu1 [at] jh [dot] edu), Lauren Klein (lklein26 [at] jh [dot]
 
 **Limitations of Our Estimates**
 
-- People who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland) but it's hard to estimate that at the precinct, ward, legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City.
+- Our estimates of the number of eligible voters in a given location are approximate. People who aren't U.S. citizens aren't eligible to vote; people convicted of felonies in prison are not eligible to vote either (https://election.lab.ufl.edu/voter-turnout/2022-general-election-turnout/ has the numbers for the state of Maryland). However, it is hard to estimate those numbers at the precinct, city council district, or legislative district level, so we just use Maryland's voting-age population (adjusted for prison gerrymandering) to estimate the population of eligible voters in any precinct in Baltimore City, so we approximate the voting-eligible population as the 18+ population adjusted for prison gerrymandering, which the Maryland state government releases at the election precinct level every 10 years.
+- We don't know the margin of error of the estimates given by our data sources.
+- The voter registration file lists voters' sex as M, F, or U, which we interpret as voters' sex being classified as male, female, or unknown.
 
-**Data Tips**
+**Tips for Processing Voter Registration Files**
 
-- When requesting voter registration files, date of birth (DOB) needed to be specifically requested, as these do not come with the data by default. These were important for creating the age variable in the dataset. 
+- When [requesting Maryland voter registration files](https://elections.maryland.gov/voter_registration/data.html), the date of birth (DOB) variable needs to be specifically requested, as it does not come with the data by default. We used this variable to create the age variable in the dataset.
+- A person's voter ID does not change across years or elections.
+- A voter may be listed as having voted more than once in a single election in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absentee more than once or in more than one way.
+- A voter's listed precinct, legislative, councilmanic, and congressional district are for the year in which you requested the data. Therefore, due to possible redistricting across years, if you are analyzing voter turnout from a previous year, we recommend that you use a different data source to map from precinct to the various districts you want to aggregate to.
+- Note about under-18 voters: According to https://www.elections.maryland.gov/voter_registration/17_year_olds.html, “A registered 17 year old may vote in the Primary Election, provided the individual will be 18 years old on or before General Election. These 17 year olds are entitled to vote for all partisan contests and for school board contests but not in a special election (Washington County's ballot question) or municipal election (City of Cumberland in Allegany County). This information reflects the [Court of Appeals' order issued on Friday, February 8, 2008](http://mdcourts.gov/opinions/coa/2008/122a07pc.pdf).”
 
-- Voter ID duplicates exist in the voting history datafile, mostly for participants who were issued a provisional ballot and voted in another form or who voted absenteee more than once. A person's voter ID does not change across elections (i.e., across time).
+**Organization of This Repository**
+
+- We initially planned to analyze the 2022 general election instead of the 2020 primary, so we wrote a bunch of code (in the `code/general_election_2022/` folder), processed a bunch of data (in the `data/input/public/Baltimore_City/general_election_2022/` and `data/intermediate/public/Baltimore_City/general_election_2022/` folders), and documented a bunch of data resources in [our data resources Google doc](https://docs.google.com/document/d/16UW9zmYuGrCxumN4ZttN8MLPFq9l1TR3RaSkG8wkYIw/edit?usp=sharing) for it.
+
+**Disclaimer**
+
+The contents of this website are solely the opinions of the authors and not of any organization including Johns Hopkins University nor the League of Women Voters. 
