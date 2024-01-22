@@ -38,7 +38,7 @@ age_and_sex_of_voted_2020_primary <- age_and_sex_of_voted_2020_primary %>%
   mutate(Voted_16to17 = ifelse(is.na(Voted_16to17), 0, Voted_16to17),
          Voted_UnknownAge = ifelse(is.na(Voted_UnknownAge), 0, Voted_UnknownAge),
          Voted_UnknownSex = ifelse(is.na(Voted_UnknownSex), 0, Voted_UnknownSex)) %>%
-  mutate(Voted_Total = Voted_16to17 + Voted_18to29 + Voted_30to49 + Voted_50to64 + Voted_65plus + Voted_UnknownAge, # checked: equivalent to Voted_Female + Voted_Male + Voted_UnknownSex
+  mutate(Voted_Total = Voted_16to17 + Voted_18to29 + Voted_30to49 + Voted_50to64 + Voted_65plus + Voted_UnknownAge, # checked: equivalent to Voted_Female + Voted_Male + Voted_UnknownSex; must be 17+ to vote in primary (must be 18 by time of general election); luckily no one in dataset was recorded as under 16 and voted
          Voted_Adults = Voted_18to29 + Voted_30to49 + Voted_50to64 + Voted_65plus)
 
 # reformat registered demographic data
@@ -94,7 +94,7 @@ sex_of_registered_2020_primary <- sex_of_registered_2020_primary %>%
 merged_data <- full_join(age_and_sex_of_voted_2020_primary, adjusted_adult_population_2020, by = "Precinct") %>%
   full_join(sex_of_registered_2020_primary) %>%
   full_join(age_of_registered_2020_primary) %>%
-  mutate(Precinct = paste0(substr(Precinct, 2, 7))) # use {2 digit ward}-{3 digit precinct within ward} naming convention for precinct
+  mutate(Precinct = paste0(substr(Precinct, 2, 7))) # use {2 digit ward}-{3 digit precinct within ward} naming convention for precinct, because that's what the shapefile uses
 
 # save merged dataset
 write_csv(merged_data, file = paste0(dir, "data/intermediate/public/Baltimore_City/primary_election_2020/merged_data_by_precinct.csv"))
