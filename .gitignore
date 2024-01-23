@@ -5,6 +5,7 @@
 *.DS_Store
 *.Rhistory
 *.RData
+*.~*
 
 # Ignore files from previous/unused analyses
 *ignore*
