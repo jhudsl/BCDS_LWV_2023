@@ -1,10 +1,11 @@
 # Don't sync (pull from our computers to GitHub) private data
 *private*
 
-# Ignore logger files from Mac or from R
+# Ignore logger and backup files from Mac or from R
 *.DS_Store
 *.Rhistory
 *.RData
+*.~*
 
 # Ignore files from previous/unused analyses
 *ignore*
