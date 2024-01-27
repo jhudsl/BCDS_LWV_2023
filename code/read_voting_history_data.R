@@ -10,7 +10,7 @@ election <- "2020 PRESIDENTIAL PRIMARY ELECTION"
 
 # read voting history file (.tsv)
 voter_data <- readLines(paste0(dir, "data/input/private/Maryland/Maryland_2022_Voting_History"))
-voter_data <- gsub("\t\t","\tNA\t",voter_data)
+voter_data <- gsub("\t\t", "\tNA\t", voter_data)
 voter_data <- fread(text=voter_data, sep="\t", header=TRUE)
 
 # read voter registration file (.txt); currently registered voters (as of the data being requested in December 2023)
