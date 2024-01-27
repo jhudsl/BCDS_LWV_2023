@@ -1,0 +1,192 @@
+---
+title: "Analyzing Workers' Access to Transportation in Baltimore, MD in 2022"
+---
+
+## Introduction
+
+In this project, I aim to explore Baltimorean workers' access to vehicles and transportation by analyzing census tract data from the U.S. Census Bureau's 2022 American Community Survey (ACS).
+
+## Load data if already downloaded from ACS
+
+I only want to pull from the Census API once, so I first check if that has been done already.
+
+```{r load-data, message = F}
+library(tidyverse)
+library(tidycensus)
+library(tigris)
+library(scales)
+library(viridis)
+
+if (!dir.exists("data")){
+  dir.create("data")
+}
+
+if (file.exists("data/Baltimore_2022ACS_B08141.csv")){
+  vehicle_data <- read_csv(file = "data/Baltimore_2022ACS_B08141.csv")
+  head(vehicle_data)
+}
+```
+
+## If not, obtain data from ACS
+
+Now, supposing that the desired data has not yet been called, the following are the steps to do so. First, I request my Census API key, which I have attached to my R environment. Then, I use the `tidycensus` function `load_variables()`, as well as the Census Bureau's [documentation](https://www2.census.gov/programs-surveys/acs/summary_file/2020/documentation/user_tools/ACS2020_Table_Shells.xlsx), to search for some relevant variables. In this analysis, I will examine the 35 variables of the form "Means of Transportation to Work by Vehicles Available".
+<!-- To have as a reference, I will also pull the variable for total population and working population. -->
+<!-- Then, I reference <https://data.census.gov/table/> for some relevant variables. -->
+
+```{r browse-variables, message = F}
+if (!file.exists("data/Baltimore_2022ACS_B08141.csv")){
+  all_vars <- load_variables(year = 2022,
+                             dataset = "acs5")
+  
+  vehicle_vars <- all_vars %>%
+    filter(str_detect(concept, "vehicle|Vehicle")) %>%
+    filter(startsWith(name, "B08141"))
+  vehicle_vars$label <- modify(.x = vehicle_vars$label, .f = ~str_remove(.x, "Estimate!!"))
+  vehicle_vars <- vehicle_vars %>%
+    mutate(label = str_remove(label, "Total:!!")) %>%
+    mutate(label = str_replace_all(label, "!!", " ")) %>%
+    select(name, label)
+  vehicle_vars
+}
+```
+
+<!-- population_vars <- all_vars %>% -->
+<!--     filter(str_detect(concept, "population|Population")) -->
+<!--   population_var <- population_vars[1, c("name", "concept")] %>% -->
+<!--     rename(label = concept) -->
+
+<!--   vehicle_vars <- bind_rows(population_var, vehicle_vars) -->
+
+I call these 35 vehicle variables from the API. Notice that the `get_acs()` function in `tidycensus` provides a point estimate for the variable and a margin of error ("moe"). In this project, I will focus on the point estimates only, though a future, more in-depth project would certainly take into account the margin of error of these estimates.
+<!-- , along with the variable for total population (`"B01003_001"`), -->
+
+```{r get-data}
+if (!file.exists("data/Baltimore_2022ACS_B08141.csv")){
+  vehicle_data <- get_acs(geography = "tract",
+                          state = "MD",
+                          county = "Baltimore city",
+                          year = 2022,
+                          variables = vehicle_vars$name) %>%
+    left_join(vehicle_vars, by = join_by(variable == name)) %>%
+    select(-c(NAME)) # GEOID includes information contained in NAME
+  head(vehicle_data)
+  
+  write_csv(vehicle_data, file = "data/Baltimore_2022ACS_B08141.csv")
+}
+```
+
+## Analyze data
+
+Let's examine the distribution of workers' access to vehicles in general.
+
+```{r vehicle-access, warning = F}
+vehicle_access <- vehicle_data %>%
+  filter(variable %in% c("B08141_001", "B08141_002", "B08141_003", "B08141_004", "B08141_005")) %>%
+  select(GEOID, variable, estimate) %>%
+  pivot_wider(id_cols = GEOID, names_from = variable, values_from = estimate)
+
+vehicle_access_baltimore <- vehicle_access %>%
+  select(-c(GEOID)) %>%
+  map(sum) %>%
+  unlist() %>%
+  tibble(Estimate = .)
+vehicle_access_baltimore$Variable <- c("Total workers aged 16+",
+                      "0 vehicles available",
+                      "1 vehicle available",
+                      "2 vehicles available",
+                      "3+ vehicles available")
+
+ggplot(vehicle_access_baltimore %>% filter(Variable != "Total workers aged 16+")) +
+  geom_col(aes(y = Estimate, x = Variable, fill = Variable)) +
+  scale_y_continuous(label=comma) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
+  labs(title = "Vehicular Access of All Baltimorean Workers Aged 16+", caption = "A bar chart showing overall worker access to vehicles in Baltimore City in 2022.", x = "", y = "Estimated Number of Workers") +
+  theme_bw()
+```
+The above plot shows that most workers have access to 1 or 2 vehicles.
+
+Now, let's examine the proportion of workers who do not have access to any vehicle (such workers may walk, take public transit, carpool, bike, taxi, etc. to work, or they may work from home).
+
+```{r no-vehicles-boxplot, warning = F}
+vehicle_access <- vehicle_access %>%
+  mutate(proportion_no_vehicles = B08141_002 / B08141_001,
+         proportion_1_vehicle = B08141_003 / B08141_001,
+         proportion_2_vehicles = B08141_004 / B08141_001,
+         proportion_3plus_vehicles = B08141_005 / B08141_001)
+
+ggplot(vehicle_access) +
+  geom_boxplot(aes(y = proportion_no_vehicles)) +
+  scale_y_continuous(labels = label_percent()) +
+  theme(axis.text.x = element_blank()) +
+  theme_bw() +
+  labs(y = "Workers 16+ with no vehicles available", title = "Percent of vehicle-less workers across Baltimore census tracts", caption = "Boxplot showing the distribution of the percent of workers aged 16+ with no access to vehicles\nacross Baltimore's census tracts in 2022.")
+```
+
+From the above boxplot, we see that there is quite some spread in the distribution of vehicle-less workers across Baltimore, with the middle 50% of census tracts ranging from 5% to 25% of workers being vehicle-less, while some census tracts have more than 50% of workers with no vehicles. Let's see how the distribution looks on a map:
+
+```{r vehicle-access-maps, message = F, results = "hide"}
+tracts_info <- tigris::tracts(state = "MD", county = "Baltimore city", year = 2022)
+geometries <- subset(tracts_info, select = c("GEOID", "geometry"))
+
+vehicle_access_with_geometry <- merge(geometries, vehicle_access, by = "GEOID")
+
+vehicle_access_with_geometry_concise <- vehicle_access_with_geometry %>%
+    select(proportion_no_vehicles, proportion_1_vehicle, proportion_2_vehicles, proportion_3plus_vehicles, geometry) %>%
+    pivot_longer(cols = c(proportion_no_vehicles, proportion_1_vehicle, proportion_2_vehicles, proportion_3plus_vehicles), names_to = "Variable")
+
+ggplot(vehicle_access_with_geometry_concise) +
+  geom_sf(aes(geometry = geometry, fill = value)) +
+  facet_wrap(vars(Variable), labeller = as_labeller(c(proportion_no_vehicles = "Percent with 0 vehicles", proportion_1_vehicle = "Percent with 1 vehicles", proportion_2_vehicles = "Percent with 2 vehicles", proportion_3plus_vehicles = "Percent with 3+ vehicles"))) +
+  scale_fill_viridis(labels = label_percent()) +
+  labs(fill = "Percent of Workers 16+", title = "Vehicle-Less and Vehicle-Full Workers across Baltimore City Census Tracts", caption = "Maps showing percentage of workers aged 16+\nwith access to 0, 1, 2, and 3+ vehicles,\nrespectively, across Baltimore's census tracts in 2022.") +
+  theme_bw()
+```
+<!-- ggplot(vehicle_access_with_geometry) + -->
+<!--   geom_sf(aes(geometry = geometry, fill = proportion_no_vehicles)) + -->
+<!--   scale_fill_viridis(labels = label_percent()) + -->
+<!--   labs(fill = "Workers 16+ with no vehicles available", title = "Vehicle-less workers across Baltimore census tracts", caption = "Map showing percent of workers aged 16+ with no access to vehicles\nacross Baltimore's census tracts in 2022.") + -->
+<!--   theme_bw() -->
+
+
+## Summary of results
+
+The above maps show the disparity and segregation in Baltimore, in a way that the bar chart and the boxplot, which both collapsed the spatial dimension of the 2022 census tracts, could not. In the map, we can see that the northern and southeastern edges of Baltimore City have abundant workers with access to at least one vehicle, while the middle of Baltimore City and a census tract that appears to be in or near Pigtown (and really contrasts with its immediate neighbors) have high numbers of workers with no vehicular access.
+
+
+## List of Functions Used
+
+`dplyr`
+
+- `filter()`
+- `str_replace_all()`
+- `str_remove()`
+- `left_join()`
+- `select()`
+- `rename()`
+- `bind_rows()`
+- `summarize()`
+
+`tidyr`
+
+- `pivot_wider()`
+- `pivot_longer()`
+
+`stringr`
+
+- `str_detect()`
+
+`readr`
+
+- `write_csv()`
+
+`purrr`
+
+- `modify()`
+- `map()`
+
+`ggplot2`
+
+- `geom_col()`
+- `geom_boxplot()`
+- `geom_sf()`
+- `facet_wrap()`
