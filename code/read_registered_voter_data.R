@@ -62,6 +62,17 @@ sum(total_adults_registered_baltimore$COUNT) ### 598,119 over 18 y/o registered 
 # Create voter AGE groups
 sum(is.na(registered_voters_baltimore$AGE)) ### 699 missing ages in Baltimore
 
+# To do: clean the data. Some (1.6%) of these ages are strange
+# > summary(registered_voters_baltimore$AGE)
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#  -30.00   34.00   49.00   51.23   65.00  130.00     631
+# > sum(registered_voters_baltimore$AGE > 100, na.rm = T)
+# [1] 9175
+# > 9175/nrow(registered_voters_baltimore)
+# [1] 0.01642196
+# > sum(registered_voters_baltimore$AGE < 0, na.rm = T)
+# [1] 7
+
 registered_voters_baltimore = registered_voters_baltimore %>%
   mutate(AGE_GROUP = case_when(AGE < 16 ~ "< 16",
                                AGE = 16 & AGE < 18 ~ "16-17",
