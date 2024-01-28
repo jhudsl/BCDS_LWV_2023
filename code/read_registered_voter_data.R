@@ -14,7 +14,7 @@ dir <- "../"
 # Election Date (for code flexibility)
   # 2020 Primary: 2020-06-02
   # 2022 General: 2022-11-08
-election_date <- as.Date("2022-11-08")
+election_date <- as.Date("2020-06-02")
 
 # Import data
 registered_voters <- read.delim(paste0(dir, "data/input/private/Maryland/Maryland_2022_Registered_Voter_List.txt"),
