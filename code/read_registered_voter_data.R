@@ -75,11 +75,11 @@ sum(is.na(registered_voters_baltimore$AGE)) ### 699 missing ages in Baltimore
 
 registered_voters_baltimore = registered_voters_baltimore %>%
   mutate(AGE_GROUP = case_when(AGE < 16 ~ "< 16",
-                               AGE = 16 & AGE < 18 ~ "16-17",
-                               AGE >=18 & AGE <30 ~ "18-29",
-                               AGE >=30 & AGE <50 ~ "30-49",
-                               AGE >=50 & AGE <65 ~ "50-64",
-                               AGE >=65 ~ "65+")) ### creating age group variable
+                               AGE >= 16 & AGE < 18 ~ "16-17",
+                               AGE >= 18 & AGE < 30 ~ "18-29",
+                               AGE >= 30 & AGE < 50 ~ "30-49",
+                               AGE >= 50 & AGE < 65 ~ "50-64",
+                               AGE >= 65 ~ "65+")) ### creating age group variable
 
 registered_voters_baltimore_age = registered_voters_baltimore %>%
   group_by(PRECINCT, COUNCILMANIC_DISTRICTS, LEGISLATIVE_DISTRICTS) %>%
